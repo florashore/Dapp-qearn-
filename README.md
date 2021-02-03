@@ -1,3 +1,5 @@
+![Py1620](https://github.com/mdoege/Py1620/raw/master/py1620.png "Power of Two output in IBM 1403 font")
+
 ## Py1620 emulator
 
 A very basic [IBM 1620](https://en.wikipedia.org/wiki/IBM_1620) emulator in Python. It implements enough of the 1620 instruction set to run the CHM [Power of Two](https://github.com/IBM-1620/Junior/blob/master/diagnostics/binaries/APP_Power_Of_2.cmem) demo program correctly but probably not much else.
