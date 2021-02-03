@@ -10,6 +10,8 @@ Overbars for the flag bit are printed using Unicode combining characters and may
 
 Also see this [YouTube video](https://www.youtube.com/watch?v=e4JH26yF_u0) of Power of Two running on the far more accurate [1620 Junior](https://github.com/IBM-1620) emulator.
 
+The IBM 1403 printer font is available at [ibm-1401.info](http://ibm-1401.info/Sched2008December.html#1403-Font).
+
 ### Sample run
 
 ```
