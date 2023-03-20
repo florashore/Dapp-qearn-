@@ -3,30 +3,34 @@
 import sys
 from array import array
 
-MSIZE = 20000
-PC = 0
-RM = 10
-NB = 12
+MSIZE = 20000   # memory size in decimal digits
+PC = 0      # program counter
+RM = 10     # record mark
+NB = 12     # numeric blank
 #CF = open("tic.txt")   # open punch card file (in SIMH txt format)
-MAXSHOW = 130
-OVER = "\u0305"
-CARDNUM = 0
-CMD = open("cmd.txt", "w")
+MAXSHOW = 130       # RAM dump maximum
+OVER = "\u0305"     # overbar character
+CARDNUM = 0         # current card number
+CMD = open("cmd.txt", "w")  # output trace to text file
 
+# create memory and flag bit arrays
 M = array('H', [0] * MSIZE)
 F = array('H', [0] * MSIZE)
 
+# create status flags
 IND = {}
 IND["LASTCARD"] = False
 IND["EQ"] = False
 IND["HEQ"] = False
 IND["HIGH"] = False
 
+# read character codes
 almer = {}
 with open("alpha.txt") as alpha:
     for l in alpha:
         almer[l[3]] = int(l[0]), int(l[1])
 
+# read op codes for printing trace to cmd.txt
 c = """21 A
 11 AM
 22 S
