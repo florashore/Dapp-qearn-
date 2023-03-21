@@ -3,21 +3,27 @@
 import sys
 from array import array
 
+if len(sys.argv) > 1 and sys.argv[1] == "pow":
+    CMEM = True     # read from CMEM file
+else:
+    CMEM = False    # read punch card file
+
 MSIZE = 20000   # memory size in decimal digits
+sys.set_int_max_str_digits(MSIZE)
 PC = 0      # program counter
 RM = 10     # record mark
 NB = 12     # numeric blank
-#CF = open("tic.txt")   # open punch card file (in SIMH txt format)
 MAXSHOW = 130       # RAM dump maximum
 OVER = "\u0305"     # overbar character
 CARDNUM = 0         # current card number
 CMD = open("cmd.txt", "w")  # output trace to text file
+BRANCH_BACK = 0     # saved subroutine return address
 
 # create memory and flag bit arrays
 M = array('H', [0] * MSIZE)
 F = array('H', [0] * MSIZE)
 
-# create status flags
+# create indicator status flags
 IND = {}
 IND["LASTCARD"] = False
 IND["EQ"] = False
@@ -77,20 +83,27 @@ for l in c.split("\n"):
 
 # read a punch card line to pos
 def cardline(pos):
-    global CARDNUM
+    global CARDNUM, PC
+
+    if IND["LASTCARD"]:
+        print("no more cards to read, halting at PC =", PC)
+        sys.exit()
+        #PC = 402
+        #return
 
     l = CF.readline().strip()
-    l = l.replace(" ", "")
     if l == "":
         IND["LASTCARD"] = True
     CARDNUM += 1
-    print("CARD: ", CARDNUM)
+    #print("*** reading punch card: ", CARDNUM)
+    #print(l, pos)
     for i, x in enumerate(l):
         n = i + pos
         asc = ord(x)
-        if asc < 58:
+        if 47 < asc < 58:
             val = int(x)
             M[n] = val
+            F[n] = 0
         if x == "]":
             M[n] = 0
             F[n] = 1
@@ -101,29 +114,34 @@ def cardline(pos):
         if x == "!":
             M[n] = RM
             F[n] = 1
-        if x == "@":
+        if x == "@" or x == " ":
             M[n] = NB
             F[n] = 0
         if 73 < asc < 83:
             M[n] = -(73 - asc)
             F[n] = 1
-# Method A to get code into the emulator, currently commented out:
-####cardline(0)     # read first line from punch card file CF
 
-# Here we use method B instead, loading a CMEM core file into memory:
-with open("APP_Power_Of_2.cmem") as cmem:
-    for l in cmem:
-        l = l.strip()
-        if l == "": continue
-        l = l.split("/")[0]
-        if len(l) < 7: continue
-        if l[5] == ":":
-            x = int(l[:5])
-            v = l[7:].split()
-            for n, y in enumerate(v):
-                y = y.strip()
-                F[x+n] = int(y[0])
-                M[x+n] = int(y[1], 16)
+# Method 1 to get code into the emulator:
+# open a punch card file (in SIMH txt format)
+if not CMEM:
+    CF = open("tic.txt")
+    cardline(0)     # read first line from punch card file CF
+
+# Method 2: load a CMEM core file into memory:
+if CMEM:
+    with open("APP_Power_Of_2.cmem") as cmem:
+        for l in cmem:
+            l = l.strip()
+            if l == "": continue
+            l = l.split("/")[0]
+            if len(l) < 7: continue
+            if l[5] == ":":
+                x = int(l[:5])
+                v = l[7:].split()
+                for n, y in enumerate(v):
+                    y = y.strip()
+                    F[x+n] = int(y[0])
+                    M[x+n] = int(y[1], 16)
 
 # get immediate value
 def getim(x):
@@ -201,8 +219,23 @@ def dumpmem():
 known = (
 (2,1),(1,1),(3,3),(4,8),(2,2),(1,2),(3,2),(3,7),(3,6),(3,9),(3,8),
 (4,1),(2,6),(1,6),(4,6),(4,9),(4,5),(2,5),(1,5),(4,4),(3,1),(3,4),
-(1,4),(4,3),(4,7),(2,4)
+(1,4),(4,3),(4,7),(2,4),(1,7),(4,2)
 )
+
+# set indicators
+def set_ind(x):
+    if x > 0:
+        IND["HIGH"] = True
+    else:
+        IND["HIGH"] = False
+    if x == 0:
+        IND["EQ"] = True
+    else:
+        IND["EQ"] = False
+    if IND["HIGH"] or IND["EQ"]:
+        IND["HEQ"] = True
+    else:
+        IND["HEQ"] = False
 
 while True:
     if 0: #PC == 232:   # set breakpoint
@@ -215,7 +248,8 @@ while True:
         CMD.write(str(M[PC+i]))
     CMD.write("\n")
     if (M[PC], M[PC+1]) not in known:
-        print("Error: op code not implemented:", M[PC], M[PC+1], M[PC+2:PC+12])
+        print()
+        print("*** Error: op code not implemented:", M[PC], M[PC+1], M[PC+2:PC+12], "PC = ", PC)
         dumpmem()
         sys.exit()
     # A
@@ -224,6 +258,7 @@ while True:
         q = getnum(PC+7)
         #print("***",p," ",q," ")
         setnum(getim(PC+2), p + q)
+        set_ind(p + q)
 
     # AM
     if M[PC] == 1 and M[PC+1] == 1:
@@ -231,6 +266,7 @@ while True:
         q = getim(PC+7)
         #print("***",p," ",q," ")
         setnum(getim(PC+2), p + q)
+        set_ind(p + q)
 
     # CM
     if M[PC] == 1 and M[PC+1] == 4:
@@ -254,7 +290,6 @@ while True:
     if M[PC] == 2 and M[PC+1] == 4:
         p = getnum(PC+2)
         q = getnum(PC+7)
-        #print("CM:",p,q)
         if p > q:
             IND["HIGH"] = True
         else:
@@ -274,7 +309,11 @@ while True:
 
     # H
     if M[PC] == 4 and M[PC+1] == 8:
-        break
+        #break
+        print()
+        print("*** auto-resume from HALT at", PC)
+        PC += 12
+        continue
 
     # S
     if M[PC] == 2 and M[PC+1] == 2:
@@ -282,6 +321,7 @@ while True:
         q = getnum(PC+7)
         #print("***",p," ",q," ")
         setnum(getim(PC+2), p - q)
+        set_ind(p - q)
 
     # SM
     if M[PC] == 1 and M[PC+1] == 2:
@@ -289,6 +329,7 @@ while True:
         q = getim(PC+7)
         #print("SM: ",p," ",q," ")
         setnum(getim(PC+2), p - q)
+        set_ind(p - q)
 
     # SF
     if M[PC] == 3 and M[PC+1] == 2:
@@ -360,6 +401,7 @@ while True:
     if M[PC] == 3 and M[PC+1] == 1:
         p = getim(PC+2)
         q = getim(PC+7)
+        #print("TR: ", p, q)
         while True:
             M[p] = M[q]
             F[p] = F[q]
@@ -380,6 +422,22 @@ while True:
             p -= 1
             q -= 1
 
+    # BTM
+    if M[PC] == 1 and M[PC+1] == 7:
+        pos = getim(PC+2)
+        q = getim(PC+7)
+        for n, i in enumerate("%05u" % q):
+            M[pos-5+n] = int(i)
+        F[pos-5] = 1
+        BRANCH_BACK = PC + 12
+        PC = pos
+        continue
+
+    # BB
+    if M[PC] == 4 and M[PC+1] == 2:
+        PC = BRANCH_BACK
+        continue
+
     # BI
     if M[PC] == 4 and M[PC+1] == 6:
         pos = getim(PC+2)
@@ -392,6 +450,10 @@ while True:
         elif dev == 900:
             #print("card check", PC, pos)
             if IND["LASTCARD"]:
+                PC = pos
+                continue
+        elif dev == 1100:
+            if IND["HIGH"]:
                 PC = pos
                 continue
         elif dev == 1200:
@@ -407,7 +469,7 @@ while True:
         elif dev <= 400:
             pass #print("sense", pos)
         else:
-            print("BI fail")
+            print("BI fail", pos, dev)
             sys.exit(0)
 
     # BNI
@@ -425,6 +487,10 @@ while True:
             if not IND["LASTCARD"]:
                 PC = pos
                 continue
+        elif dev == 1100:
+            if not IND["HIGH"]:
+                PC = pos
+                continue
         elif dev == 1200:
             if not IND["EQ"]:
                 PC = pos
@@ -438,7 +504,7 @@ while True:
         elif dev <= 400:
             pass #print("sense", pos)
         else:
-            print("BI fail")
+            print("BNI fail", pos, dev)
             sys.exit(0)
 
     # B
@@ -491,7 +557,13 @@ while True:
 
     # K
     if M[PC] == 3 and M[PC+1] == 4:
-        print()
+        q = getim(PC+7)
+        if q == 101:
+            print(" ", end="")
+        if q == 102:
+            print()
+        if q == 108:
+            print("\t", end="")
 
     PC += 12
     #print("new PC: ", PC)
