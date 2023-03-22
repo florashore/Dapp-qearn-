@@ -6,9 +6,9 @@ A very basic [IBM 1620](https://en.wikipedia.org/wiki/IBM_1620) emulator in Pyth
 
 ### Power of 2
 
-The code is loaded from the CMEM file. Computing 2**9999 takes about 18 seconds on a PC, so the program is about 70x as fast as a real IBM 1620. The addition and multiplication tables in 1620 memory are not used but standard Python integer math.
+The code is loaded from the CMEM file. The addition and multiplication tables in 1620 memory are not used but standard Python integer math. Computing 2**9999 takes about 18 seconds on a PC, so the program is about 70x as fast as a real IBM 1620.
 
-Overbars for the flag bit are printed using Unicode combining characters and may not look good with some fonts.
+Overbars for the flag bit are printed using Unicode combining characters and may not look good (e.g. be shifted horizontally) with some fonts.
 
 Also see this [YouTube video](https://www.youtube.com/watch?v=e4JH26yF_u0) of Power of Two running on the far more accurate [1620 Junior](https://github.com/IBM-1620) emulator.
 
@@ -63,5 +63,8 @@ YOUR PLAY 7
 
 ### Font
 
-
 The IBM 1403 printer font is available at [ibm-1401.info](http://ibm-1401.info/Sched2008December.html#1403-Font).
+
+### Further reading
+
+* [Basic Programming Concepts and the IBM 1620 Computer](http://www.bitsavers.org/pdf/ibm/1620/Basic_Programming_Concepts_and_the_IBM_1620_Computer_1962.pdf)

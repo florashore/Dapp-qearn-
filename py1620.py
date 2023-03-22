@@ -460,6 +460,10 @@ while True:
             if IND["EQ"]:
                 PC = pos
                 continue
+        elif dev == 1300:
+            if IND["HEQ"]:
+                PC = pos
+                continue
         elif dev == 1400:
             pass #print("overflow check", pos)
         elif dev == 1600:
@@ -493,6 +497,10 @@ while True:
                 continue
         elif dev == 1200:
             if not IND["EQ"]:
+                PC = pos
+                continue
+        elif dev == 1300:
+            if not IND["HEQ"]:
                 PC = pos
                 continue
         elif dev == 1400:
