@@ -1,4 +1,6 @@
-## Py1620 emulator
+![logo](logo.png "Py1620 logo")
+
+## Py1620 (IBM 1620 emulator)
 
 A very basic [IBM 1620](https://en.wikipedia.org/wiki/IBM_1620) emulator in Python. It currently implements enough of the 1620 instruction set to run the [Computer History Museum](https://computerhistory.org/)'s [Power of Two](https://github.com/IBM-1620/Junior/blob/master/diagnostics/binaries/APP_Power_Of_2.cmem) demo program or Tic-Tac-Toe (11.0.013) from the 1620 General Program Library.
 
@@ -65,9 +67,11 @@ YOUR PLAY 7
  TIE GAME
 ```
 
-### Font
+### Credits
 
 The IBM 1403 printer font is available at [ibm-1401.info](http://ibm-1401.info/Sched2008December.html#1403-Font).
+
+[IBM 1620 image](https://commons.wikimedia.org/wiki/File:IBM_1620_console_typewriter.mw.jpg) by Marcin Wichary, CC BY 2.0 <https://creativecommons.org/licenses/by/2.0>, via Wikimedia Commons
 
 ### Further reading
 
