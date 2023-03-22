@@ -77,7 +77,7 @@ c = """21 A
 48 H
 41 NOP"""
 cmd = {}
-for l in c.split("\n"):
+for l in c.splitlines():
     x,y = l.split(" ")
     cmd[x] = y.strip()
 
