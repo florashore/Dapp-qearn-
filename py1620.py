@@ -219,7 +219,7 @@ def dumpmem():
 known = (
 (2,1),(1,1),(3,3),(4,8),(2,2),(1,2),(3,2),(3,7),(3,6),(3,9),(3,8),
 (4,1),(2,6),(1,6),(4,6),(4,9),(4,5),(2,5),(1,5),(4,4),(3,1),(3,4),
-(1,4),(4,3),(4,7),(2,4),(1,7),(4,2)
+(1,4),(4,3),(4,7),(2,4),(1,7),(4,2),(2,3),(1,3)
 )
 
 # set indicators
@@ -267,6 +267,22 @@ while True:
         #print("***",p," ",q," ")
         setnum(getim(PC+2), p + q)
         set_ind(p + q)
+
+    # M
+    if M[PC] == 2 and M[PC+1] == 3:
+        p = getnum(PC+2)
+        q = getnum(PC+7)
+        #print("***",p," ",q," ")
+        setnum(99, p * q)
+        set_ind(p * q)
+
+    # MM
+    if M[PC] == 1 and M[PC+1] == 3:
+        p = getnum(PC+2)
+        q = getim(PC+7)
+        #print("***",p," ",q," ")
+        setnum(99, p * q)
+        set_ind(p * q)
 
     # CM
     if M[PC] == 1 and M[PC+1] == 4:
