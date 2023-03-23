@@ -8,6 +8,12 @@ if len(sys.argv) > 1 and sys.argv[1] == "pow":
 else:
     CMEM = False    # read punch card file
 
+# punch card and CMEM input files
+CARD_FILE = "tic.txt"
+CMEM_FILE = "APP_Power_Of_2.cmem"
+# CPU trace output file
+TRAC_FILE = "cmd.txt"
+
 MSIZE = 20000   # memory size in decimal digits
 sys.set_int_max_str_digits(MSIZE)
 PC = 0      # program counter
@@ -16,7 +22,7 @@ NB = 12     # numeric blank
 MAXSHOW = 130       # RAM dump maximum
 OVER = "\u0305"     # overbar character
 CARDNUM = 0         # current card number
-CMD = open("cmd.txt", "w")  # output trace to text file
+CMD = open(TRAC_FILE, "w")  # output trace to text file
 BRANCH_BACK = 0     # saved subroutine return address
 
 # create memory and flag bit arrays
@@ -124,12 +130,12 @@ def cardline(pos):
 # Method 1 to get code into the emulator:
 # open a punch card file (in SIMH txt format)
 if not CMEM:
-    CF = open("tic.txt")
+    CF = open(CARD_FILE)
     cardline(0)     # read first line from punch card file CF
 
 # Method 2: load a CMEM core file into memory:
 if CMEM:
-    with open("APP_Power_Of_2.cmem") as cmem:
+    with open(CMEM_FILE) as cmem:
         for l in cmem:
             l = l.strip()
             if l == "": continue
@@ -560,7 +566,7 @@ while True:
         p = getim(PC+2)
         q = getim(PC+7)
         #print(M[PC:PC+12])
-        q = q%20000 # *** is this really needed?
+        q = q%MSIZE # *** is this really needed?
         if M[q] != RM:
             PC = p
             continue
