@@ -225,7 +225,7 @@ def dumpmem():
 known = (
 (2,1),(1,1),(3,3),(4,8),(2,2),(1,2),(3,2),(3,7),(3,6),(3,9),(3,8),
 (4,1),(2,6),(1,6),(4,6),(4,9),(4,5),(2,5),(1,5),(4,4),(3,1),(3,4),
-(1,4),(4,3),(4,7),(2,4),(1,7),(4,2),(2,3),(1,3)
+(1,4),(4,3),(4,7),(2,4),(1,7),(4,2),(2,3),(1,3),(2,7)
 )
 
 # set indicators
@@ -451,6 +451,15 @@ while True:
         for n, i in enumerate("%05u" % q):
             M[pos-5+n] = int(i)
         F[pos-5] = 1
+        BRANCH_BACK = PC + 12
+        PC = pos
+        continue
+
+    # BT
+    if M[PC] == 2 and M[PC+1] == 7:
+        pos = getim(PC+2)
+        q = getnum(PC+7)
+        setnum(pos - 1, q)
         BRANCH_BACK = PC + 12
         PC = pos
         continue
