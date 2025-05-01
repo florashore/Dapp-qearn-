@@ -591,7 +591,7 @@ while True:
     if M[PC] == 1 and M[PC+1] == 5:
         p = getim(PC+2)
         q = getim(PC+7)
-        M[p] = q
+        M[p] = abs(q)
         F[p] = F[PC+11]
 
     # K
