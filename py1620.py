@@ -384,7 +384,7 @@ while True:
         n = getim(PC+2)-1
         while True:
             c1, c2 = M[n], M[n+1]
-            out = " "
+            out = "o"   # undefined character
             if c1 == RM or c2 == RM:
                 break
             for k in almer.keys():
