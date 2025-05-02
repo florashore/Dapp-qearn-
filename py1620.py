@@ -179,7 +179,21 @@ def setnum(x, val):
         s = "%u" % -val
     else:
         s = "%u" % val
+
     sz = max(2, len(s))
+
+    # check if there is enough space for number
+    #   and remove extra digits if necessary
+    overflow = False
+    for n in range(1, sz):
+        if M[x-n] == RM:
+            overflow = True
+            #print("1 overflow***", s)
+            s = s[-n:]
+            #print("2 overflow***", s)
+            sz = max(2, len(s))
+            break
+
     for n in range(sz):
         M[x-n] = 0
         F[x-n] = 0
