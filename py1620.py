@@ -174,11 +174,14 @@ def getnum(x):
         return val
 
 # set number field
-def setnum(x, val):
+def setnum(x, val, digits = None):
     if val < 0:
         s = "%u" % -val
     else:
         s = "%u" % val
+    if digits != None:
+        digdiff = len("%u" % digits) - len(s)
+        s = "0" * digdiff + s
 
     sz = max(2, len(s))
 
@@ -356,7 +359,7 @@ while True:
         p = getnum(PC+2)
         q = getnum(PC+7)
         #print("***",p," ",q," ")
-        setnum(getim(PC+2), p - q)
+        setnum(getim(PC+2), p - q, digits = p)
         set_ind(p - q)
 
     # SM
@@ -364,7 +367,7 @@ while True:
         p = getnum(PC+2)
         q = getim(PC+7)
         #print("SM: ",p," ",q," ")
-        setnum(getim(PC+2), p - q)
+        setnum(getim(PC+2), p - q, digits = p)
         set_ind(p - q)
 
     # SF
@@ -439,6 +442,7 @@ while True:
         q = getim(PC+7)
         #print("TR: ", p, q)
         while True:
+            p = p % MSIZE
             M[p] = M[q]
             F[p] = F[q]
             if M[q] == RM:
