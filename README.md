@@ -2,7 +2,7 @@
 
 ## Py1620 (IBM 1620 emulator)
 
-A very basic [IBM 1620](https://en.wikipedia.org/wiki/IBM_1620) emulator in Python. It currently implements enough of the 1620 instruction set to run the [Computer History Museum](https://computerhistory.org/)'s [Power of Two](https://github.com/IBM-1620/Junior/blob/master/diagnostics/binaries/APP_Power_Of_2.cmem) demo program or Tic-Tac-Toe (11.0.013) from the 1620 General Program Library.
+This [IBM 1620](https://en.wikipedia.org/wiki/IBM_1620) emulator in Python can now run the famous IBM 1620 baseball game (with ```CARD_FILE = "base.txt"```). Also included are the [Computer History Museum](https://computerhistory.org/)'s [Power of Two](https://github.com/IBM-1620/Junior/blob/master/diagnostics/binaries/APP_Power_Of_2.cmem) demo program and 2-D Tic-Tac-Toe (11.0.013; ```CARD_FILE = "tic.txt"```) from the 1620 General Program Library.
 
 See the [IBM1620-Baseball](https://github.com/mdoege/IBM1620-Baseball) repo for additional IBM 1620 tools and documentation.
 

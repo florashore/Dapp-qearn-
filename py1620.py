@@ -10,7 +10,10 @@ else:
 
 # punch card and CMEM input files
 CARD_FILE = "tic.txt"
+#CARD_FILE = "base.txt"
+
 CMEM_FILE = "APP_Power_Of_2.cmem"
+
 # CPU trace output file
 TRAC_FILE = "cmd.txt"
 
@@ -242,7 +245,7 @@ def dumpmem():
 known = (
 (2,1),(1,1),(3,3),(4,8),(2,2),(1,2),(3,2),(3,7),(3,6),(3,9),(3,8),
 (4,1),(2,6),(1,6),(4,6),(4,9),(4,5),(2,5),(1,5),(4,4),(3,1),(3,4),
-(1,4),(4,3),(4,7),(2,4),(1,7),(4,2),(2,3),(1,3),(2,7)
+(1,4),(4,3),(4,7),(2,4),(1,7),(4,2),(2,3),(1,3),(2,7),(3,5)
 )
 
 # set indicators
@@ -423,6 +426,11 @@ while True:
             else:
                 print(M[n], end="")
             n += 1
+
+    # DN
+    if M[PC] == 3 and M[PC+1] == 5:
+        #print("DN")
+        pass
 
     # TF
     if M[PC] == 2 and M[PC+1] == 6:
