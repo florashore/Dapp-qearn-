@@ -465,10 +465,11 @@ while True:
     # BTM
     if M[PC] == 1 and M[PC+1] == 7:
         pos = getim(PC+2)
-        q = getim(PC+7)
-        for n, i in enumerate("%05u" % q):
-            M[pos-5+n] = int(i)
-        F[pos-5] = 1
+        for i in range(4, -1, -1):
+            M[pos-5+i] = M[PC+7+i]
+            F[pos-5+i] = F[PC+7+i]
+            if i < 4 and F[PC+7+i]:
+                break
         BRANCH_BACK = PC + 12
         PC = pos
         continue
