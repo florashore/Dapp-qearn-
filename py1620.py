@@ -3,6 +3,8 @@
 import sys
 from array import array
 
+DEBUG = False
+
 if len(sys.argv) > 1 and sys.argv[1] == "pow":
     CMEM = True     # read from CMEM file
 else:
@@ -15,7 +17,8 @@ CARD_FILE = "tic.txt"
 CMEM_FILE = "APP_Power_Of_2.cmem"
 
 # CPU trace output file
-TRAC_FILE = "cmd.txt"
+if DEBUG:
+    CMD = open("cmd.txt", "w")  # output trace to text file
 
 MSIZE = 20000   # memory size in decimal digits
 sys.set_int_max_str_digits(MSIZE)
@@ -25,7 +28,6 @@ NB = 12     # numeric blank
 MAXSHOW = 130       # RAM dump maximum
 OVER = "\u0305"     # overbar character
 CARDNUM = 0         # current card number
-CMD = open(TRAC_FILE, "w")  # output trace to text file
 BRANCH_BACK = 0     # saved subroutine return address
 
 # create memory and flag bit arrays
@@ -268,15 +270,17 @@ while True:
         dumpmem()
         sys.exit()
 
-    CMD.write(str(PC) + ": ")
-    CMD.write(cmd.get(str(M[PC]) + str(M[PC+1]), "**") + " ")
-    for i in range(2, 12):
-        CMD.write(str(M[PC+i]))
-    CMD.write("\n")
+    if DEBUG:
+        CMD.write(str(PC) + ": ")
+        CMD.write(cmd.get(str(M[PC]) + str(M[PC+1]), "**") + " ")
+        for i in range(2, 12):
+            CMD.write(str(M[PC+i]))
+        CMD.write("\n")
     if (M[PC], M[PC+1]) not in known:
         print()
         print("*** Error: op code not implemented:", M[PC], M[PC+1], M[PC+2:PC+12], "PC = ", PC)
-        dumpmem()
+        if DEBUG:
+            dumpmem()
         sys.exit()
     # A
     if M[PC] == 2 and M[PC+1] == 1:
