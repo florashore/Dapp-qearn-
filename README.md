@@ -2,7 +2,7 @@
 
 ## Py1620 (IBM 1620 emulator)
 
-This [IBM 1620](https://en.wikipedia.org/wiki/IBM_1620) emulator in Python can now run the famous IBM 1620 baseball game (with ```CARD_FILE = "base.txt"```). Also included are the [Computer History Museum](https://computerhistory.org/)'s [Power of Two](https://github.com/IBM-1620/Junior/blob/master/diagnostics/binaries/APP_Power_Of_2.cmem) demo program and 2-D Tic-Tac-Toe (11.0.013; ```CARD_FILE = "tic.txt"```) from the 1620 General Program Library.
+This [IBM 1620](https://en.wikipedia.org/wiki/IBM_1620) emulator in Python can now run the famous IBM 1620 baseball game (with ```CARD_FILE = "base.txt"```). Also included are the [Computer History Museum](https://computerhistory.org/)'s [Power of Two](https://github.com/IBM-1620/Junior/blob/master/diagnostics/binaries/APP_Power_Of_2.cmem) demo program, 2-D Tic-Tac-Toe (11.0.013; ```CARD_FILE = "tic.txt"```) from the 1620 General Program Library, and "99 Bottles of Beer" by Chuck Guzis (2005; ```CARD_FILE = "beer.txt"```).
 
 See the [IBM1620-Baseball](https://github.com/mdoege/IBM1620-Baseball) repo for additional IBM 1620 tools and documentation.
 
@@ -41,7 +41,8 @@ The program is loaded from the punch card text file. When the computer loses, it
 ```
 $ python3 py1620.py
 
-*** auto-resume from HALT at 0
+*** System HALT at address 0; please press Return to continue
+
 
 SQUARES NUMBERED AS FOLLOWS
 
@@ -52,7 +53,8 @@ SQUARES NUMBERED AS FOLLOWS
 7  8  9
 
 SW 1 ON FOR DATA,PUSH START
-*** auto-resume from HALT at 1350
+*** System HALT at address 1350; please press Return to continue
+
 
 NEW GAME
 YOUR PLAY 5

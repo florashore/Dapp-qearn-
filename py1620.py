@@ -357,7 +357,9 @@ while True:
     if M[PC] == 4 and M[PC+1] == 8:
         #break
         print()
-        print("*** auto-resume from HALT at", PC)
+        #print("*** auto-resume from HALT at", PC)
+        print("*** System HALT at address %u; please press Return to continue" % PC)
+        input()
         PC += 12
         continue
 
