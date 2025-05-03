@@ -2,7 +2,13 @@
 
 ## Py1620 (IBM 1620 emulator)
 
-This [IBM 1620](https://en.wikipedia.org/wiki/IBM_1620) emulator in Python can now run the famous IBM 1620 baseball game (with ```CARD_FILE = "base.txt"```). Also included are the [Computer History Museum](https://computerhistory.org/)'s [Power of Two](https://github.com/IBM-1620/Junior/blob/master/diagnostics/binaries/APP_Power_Of_2.cmem) demo program, 2-D Tic-Tac-Toe (11.0.013; ```CARD_FILE = "tic.txt"```) from the 1620 General Program Library, and "99 Bottles of Beer" by Chuck Guzis (2005; ```CARD_FILE = "beer.txt"```).
+This [IBM 1620](https://en.wikipedia.org/wiki/IBM_1620) emulator in Python can now run the famous IBM 1620 baseball game ("base.txt"). Also included are the [Computer History Museum](https://computerhistory.org/)'s [Power of Two](https://github.com/IBM-1620/Junior/blob/master/diagnostics/binaries/APP_Power_Of_2.cmem) demo program, 2-D Tic-Tac-Toe (11.0.013; "tic.txt") from the 1620 General Program Library, and "99 Bottles of Beer" by Chuck Guzis (2005; "beer.txt").
+
+Usage:
+
+```python3 py1620.py [card deck input file]```
+
+By default, terminal output speed is now limited to 10 characters per second like a typewriter on a real IBM 1620.
 
 See the [IBM1620-Baseball](https://github.com/mdoege/IBM1620-Baseball) repo for additional IBM 1620 tools and documentation.
 
@@ -32,7 +38,7 @@ N = 100
 2**1̅00 = 1̅267650600228229401496703205376
 ```
 
-### Tic-Tac-Toe
+### Tic-Tac-Toe (default program)
 
 The program is loaded from the punch card text file. When the computer loses, it will learn the losing move and play differently next time:
 

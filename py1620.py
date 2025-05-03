@@ -15,6 +15,9 @@ else:
 CARD_FILE = "tic.txt"
 #CARD_FILE = "base.txt"
 
+if len(sys.argv) > 1:
+    CARD_FILE = sys.argv[1]
+
 CMEM_FILE = "APP_Power_Of_2.cmem"
 
 # CPU trace output file
