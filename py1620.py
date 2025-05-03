@@ -20,6 +20,10 @@ if len(sys.argv) > 1:
 
 CMEM_FILE = "APP_Power_Of_2.cmem"
 
+# default setting of sense switches
+
+SENSE_SW = [False, False, False, False]
+
 # CPU trace output file
 if DEBUG:
     CMD = open("cmd.txt", "w")  # output trace to text file
@@ -569,7 +573,18 @@ while True:
         elif dev == 1700:
             pass #print("mem check 2", pos)
         elif dev <= 400:
-            pass #print("sense", pos)
+            if dev == 100 and SENSE_SW[0]:
+                PC = pos
+                continue
+            if dev == 200 and SENSE_SW[1]:
+                PC = pos
+                continue
+            if dev == 300 and SENSE_SW[2]:
+                PC = pos
+                continue
+            if dev == 400 and SENSE_SW[3]:
+                PC = pos
+                continue
         else:
             print("BI fail", pos, dev)
             sys.exit(0)
@@ -608,7 +623,18 @@ while True:
         elif dev == 1700:
             pass #print("mem check 2", pos)
         elif dev <= 400:
-            pass #print("sense", pos)
+            if dev == 100 and not SENSE_SW[0]:
+                PC = pos
+                continue
+            if dev == 200 and not SENSE_SW[1]:
+                PC = pos
+                continue
+            if dev == 300 and not SENSE_SW[2]:
+                PC = pos
+                continue
+            if dev == 400 and not SENSE_SW[3]:
+                PC = pos
+                continue
         else:
             print("BNI fail", pos, dev)
             sys.exit(0)
