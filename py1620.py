@@ -1,9 +1,10 @@
 #!/usr/bin/python
 
-import sys
+import sys, time
 from array import array
 
-DEBUG = False
+DEBUG = False   # log commands to cmd.txt?
+SLOW = True     # realistic output speed (10 cps)?
 
 if len(sys.argv) > 1 and sys.argv[1] == "pow":
     CMEM = True     # read from CMEM file
@@ -426,6 +427,9 @@ while True:
     if M[PC] == 3 and M[PC+1] == 9:
         n = getim(PC+2)-1
         while True:
+            if SLOW:
+                sys.stdout.flush()
+                time.sleep(.1)
             c1, c2 = M[n], M[n+1]
             out = "o"   # undefined character
             if c1 == RM or c2 == RM:
@@ -441,6 +445,9 @@ while True:
     if M[PC] == 3 and M[PC+1] == 8:
         n = getim(PC+2)
         while True:
+            if SLOW:
+                sys.stdout.flush()
+                time.sleep(.1)
             if M[n] == RM:
                 #print()
                 break
@@ -659,6 +666,9 @@ while True:
             print()
         if q == 108:
             print("\t", end="")
+        if SLOW:
+            sys.stdout.flush()
+            time.sleep(.1)
 
     PC += 12
     #print("new PC: ", PC)
