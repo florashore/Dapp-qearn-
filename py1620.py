@@ -452,8 +452,14 @@ while True:
 
     # DN
     if M[PC] == 3 and M[PC+1] == 5:
-        #print("DN")
-        pass
+        start = getim(PC+2)
+        dev = getim(PC+7)
+        if dev == 100:
+            for i in range(start, MSIZE):
+                if F[i]:
+                    print(str(M[i]) + OVER, end="")
+                else:
+                    print(M[i], end="")
 
     # TF
     if M[PC] == 2 and M[PC+1] == 6:
