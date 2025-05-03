@@ -178,6 +178,17 @@ def getnum(x):
     else:
         return val
 
+# get length of number field
+def getlen(x):
+    s = ""
+    x2 = getim(x)
+    start = x2
+    while True:
+        s = str(M[x2]) + s
+        if F[x2] and x2 != start: break
+        x2 -= 1
+    return len(s)
+
 # set number field
 def setnum(x, val, digits = None):
     if val < 0:
@@ -302,16 +313,22 @@ while True:
     if M[PC] == 2 and M[PC+1] == 3:
         p = getnum(PC+2)
         q = getnum(PC+7)
+        for i in range(80, 100):
+            M[i] = 0
+            F[i] = 0
         #print("***",p," ",q," ")
-        setnum(99, p * q)
+        setnum(99, p * q, digits = 10** (getlen(PC+2) + getlen(PC+7) - 1))
         set_ind(p * q)
 
     # MM
     if M[PC] == 1 and M[PC+1] == 3:
         p = getnum(PC+2)
         q = getim(PC+7)
+        for i in range(80, 100):
+            M[i] = 0
+            F[i] = 0
         #print("***",p," ",q," ")
-        setnum(99, p * q)
+        setnum(99, p * q, digits = 10** (getlen(PC+2) + 4))
         set_ind(p * q)
 
     # CM
