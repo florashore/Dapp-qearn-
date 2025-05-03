@@ -28,6 +28,7 @@ RM = 10     # record mark
 NB = 12     # numeric blank
 MAXSHOW = 130       # RAM dump maximum
 OVER = "\u0305"     # overbar character
+CH_UNDEF = "\u0416" # undefined character
 CARDNUM = 0         # current card number
 BRANCH_BACK = 0     # saved subroutine return address
 
@@ -431,7 +432,7 @@ while True:
                 sys.stdout.flush()
                 time.sleep(.1)
             c1, c2 = M[n], M[n+1]
-            out = "o"   # undefined character
+            out = CH_UNDEF      # undefined character
             if c1 == RM or c2 == RM:
                 break
             for k in almer.keys():
