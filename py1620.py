@@ -145,7 +145,7 @@ def cardline(pos):
         if x == "!":
             M[n] = RM
             F[n] = 1
-        if x == "@" or x == " ":
+        if x == "@":
             M[n] = NB
             F[n] = 0
         if 73 < asc < 83:
