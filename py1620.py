@@ -145,6 +145,9 @@ def cardline(pos):
         if x == "@":
             M[n] = NB
             F[n] = 0
+        if x == " ":
+            M[n] = 0
+            F[n] = 0
         if 73 < asc < 83:
             M[n] = -(73 - asc)
             F[n] = 1
