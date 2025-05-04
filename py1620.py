@@ -116,7 +116,7 @@ def cardline(pos):
         #PC = 402
         #return
 
-    l = CF.readline().strip()
+    l = CF.readline().rstrip()
     if l == "":
         IND["LASTCARD"] = True
     CARDNUM += 1
@@ -388,9 +388,32 @@ while True:
     if M[PC] == 4 and M[PC+1] == 8:
         #break
         print()
-        #print("*** auto-resume from HALT at", PC)
-        print("*** System HALT at address %u; please press Return to continue" % PC)
-        input()
+        print("*** HALT at %u; press Return to continue; enter 'h' for help or 'q' to quit" % PC)
+
+        while True:
+            inp = input("halt>")
+            if len(inp) == 0:
+                break
+            # some debugger commands when system has been halted:
+            if inp[0] == "d":   # save memory dump
+                dumpmem()
+            if inp[0] == "s":   # show current sense switch settings
+                sw_out = "".join(["1" if q else "0" for q in SENSE_SW])
+                print("sense switches: " + sw_out)
+            if inp[0] == "t":   # toggle a sense switch with t1, t2, t3, t4
+                sw = int(inp[1])
+                SENSE_SW[sw - 1] = not SENSE_SW[sw - 1]
+                sw_out = "".join(["1" if q else "0" for q in SENSE_SW])
+                print("sense switches now: " + sw_out)
+            if inp[0] == "q":   # quit emulator
+                sys.exit(0)
+            if inp[0] == "h":   # print help
+                print("    Available commands when system is halted:")
+                print("      d        save memory dump")
+                print("      s        show current sense switch settings")
+                print("      t        toggle a sense switch with t1, t2, t3, t4")
+                print("      q        quit emulator")
+
         PC += 12
         continue
 
