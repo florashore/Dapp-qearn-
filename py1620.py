@@ -391,7 +391,7 @@ while True:
         print("*** HALT at %u; press Return to continue; enter 'h' for help or 'q' to quit" % PC)
 
         while True:
-            inp = input("halt>")
+            inp = input("halt> ").strip()
             if len(inp) == 0:
                 break
             # some debugger commands when system has been halted:
@@ -406,7 +406,7 @@ while True:
                 sw_out = "".join(["1" if q else "0" for q in SENSE_SW])
                 print("sense switches now: " + sw_out)
             if inp[0] == "q":   # quit emulator
-                sys.exit(0)
+                sys.exit()
             if inp[0] == "h":   # print help
                 print("    Available commands when system is halted:")
                 print("      d        save memory dump")
