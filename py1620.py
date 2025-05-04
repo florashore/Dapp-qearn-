@@ -111,10 +111,8 @@ def cardline(pos):
     global CARDNUM, PC
 
     if IND["LASTCARD"]:
-        print("no more cards to read, halting at PC =", PC)
-        sys.exit()
-        #PC = 402
-        #return
+        print("*** no more cards to read, halting at PC =", PC)
+        debugger("halt")
 
     l = CF.readline().rstrip()
     if l == "":
@@ -127,7 +125,7 @@ def cardline(pos):
         asc = ord(x)
         if x not in "0123456789 JKLMNOPQR ]-/|!@":
             print("*** card character not in whitelist", x)
-            sys.exit()
+            debugger("halt")
         if 47 < asc < 58:
             val = int(x)
             M[n] = val
@@ -139,7 +137,6 @@ def cardline(pos):
             M[n] = 1
             F[n] = 0
         if x == "|":
-            #print("RM ***************", n)
             M[n] = RM
             F[n] = 0
         if x == "!":
@@ -272,6 +269,51 @@ def dumpmem():
             g.write("%u:\t%u%s\n" % (z, F[z], hex(M[z]).upper()[2:] ))
     im.save("dump.png")
 
+# debugger prompt
+def debugger(prompt = "debug"):
+    while True:
+        inp = input(prompt + "> ").strip()
+        if len(inp) == 0:
+            break
+        # some debugger commands when system has been halted:
+        if inp[0] == "d":   # save memory dump
+            dumpmem()
+        if inp[0] == "e":   # examine memory
+            # "/" means second parameter is an address offset
+            if "/" in inp:
+                inp = inp.replace("/", " ")
+                is_range = True
+            else:
+                is_range = False
+
+            try:    # two addresses
+                start, end = [int(_) for _ in inp[1:].split()]
+            except: # single location
+                start = int(inp[1:])
+                end = start
+
+            if is_range:
+                end += start - 1
+            for i in range(start, end + 1):
+                print("%5u: %1u %2u" % (i, F[i], M[i]))
+        if inp[0] == "s":   # show current sense switch settings
+            sw_out = "".join(["1" if q else "0" for q in SENSE_SW])
+            print("sense switches: " + sw_out)
+        if inp[0] == "t":   # toggle a sense switch with t1, t2, t3, t4
+            sw = int(inp[1])
+            SENSE_SW[sw - 1] = not SENSE_SW[sw - 1]
+            sw_out = "".join(["1" if q else "0" for q in SENSE_SW])
+            print("sense switches now: " + sw_out)
+        if inp[0] == "q":   # quit emulator
+            sys.exit()
+        if inp[0] == "h":   # print help
+            print("    Available commands when system is halted:")
+            print("      d        save memory dump")
+            print("      e        examine memory")
+            print("      s        show current sense switch settings")
+            print("      t        toggle a sense switch with t1, t2, t3, t4")
+            print("      q        quit emulator")
+
 #show()
 
 # check for known op codes
@@ -297,9 +339,10 @@ def set_ind(x):
         IND["HEQ"] = False
 
 while True:
-    if 0: #PC == 232:   # set breakpoint
-        dumpmem()
-        sys.exit()
+    #if PC == 12:   # set breakpoints here
+    #    dumpmem()
+    #    print("*** breakpoint at PC =", PC)
+    #    debugger("break")
 
     if DEBUG:
         CMD.write(str(PC) + ": ")
@@ -313,7 +356,7 @@ while True:
         print("*** Error: op code not implemented:", M[PC], M[PC+1], M[PC+2:PC+12], "PC = ", PC)
         if DEBUG:
             dumpmem()
-        sys.exit()
+        debugger("error")
     # A
     if M[PC] == 2 and M[PC+1] == 1:
         p = getnum(PC+2)
@@ -396,50 +439,7 @@ while True:
         #break
         print()
         print("*** HALT at %u; press Return to continue; enter 'h' for help or 'q' to quit" % PC)
-
-        while True:
-            inp = input("halt> ").strip()
-            if len(inp) == 0:
-                break
-            # some debugger commands when system has been halted:
-            if inp[0] == "d":   # save memory dump
-                dumpmem()
-            if inp[0] == "e":   # examine memory
-                # "/" means second parameter is an address offset
-                if "/" in inp:
-                    inp = inp.replace("/", " ")
-                    is_range = True
-                else:
-                    is_range = False
-
-                try:    # two addresses
-                    start, end = [int(_) for _ in inp[1:].split()]
-                except: # single location
-                    start = int(inp[1:])
-                    end = start
-
-                if is_range:
-                    end += start - 1
-                for i in range(start, end + 1):
-                    print("%5u: %1u %2u" % (i, F[i], M[i]))
-            if inp[0] == "s":   # show current sense switch settings
-                sw_out = "".join(["1" if q else "0" for q in SENSE_SW])
-                print("sense switches: " + sw_out)
-            if inp[0] == "t":   # toggle a sense switch with t1, t2, t3, t4
-                sw = int(inp[1])
-                SENSE_SW[sw - 1] = not SENSE_SW[sw - 1]
-                sw_out = "".join(["1" if q else "0" for q in SENSE_SW])
-                print("sense switches now: " + sw_out)
-            if inp[0] == "q":   # quit emulator
-                sys.exit()
-            if inp[0] == "h":   # print help
-                print("    Available commands when system is halted:")
-                print("      d        save memory dump")
-                print("      e        examine memory")
-                print("      s        show current sense switch settings")
-                print("      t        toggle a sense switch with t1, t2, t3, t4")
-                print("      q        quit emulator")
-
+        debugger("halt")
         PC += 12
         continue
 
@@ -640,8 +640,8 @@ while True:
                 PC = pos
                 continue
         else:
-            print("BI fail", pos, dev)
-            sys.exit(0)
+            print("*** BI fail", pos, dev)
+            debugger("halt")
 
     # BNI
     if M[PC] == 4 and M[PC+1] == 7:
@@ -690,8 +690,8 @@ while True:
                 PC = pos
                 continue
         else:
-            print("BNI fail", pos, dev)
-            sys.exit(0)
+            print("*** BNI fail", pos, dev)
+            debugger("halt")
 
     # B
     if M[PC] == 4 and M[PC+1] == 9:
