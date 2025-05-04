@@ -6,7 +6,7 @@ This [IBM 1620](https://en.wikipedia.org/wiki/IBM_1620) emulator in Python can n
 
 ### Usage
 
-```python3 py1620.py [card deck input file] [sense switch settings]```
+```python3 py1620.py [card deck input file] [sense switch settings (optional)]```
 
 E.g., to run the baseball game with sense switch 3 set to on (= play only a single game):
 
