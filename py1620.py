@@ -125,13 +125,19 @@ def cardline(pos):
     for i, x in enumerate(l):
         n = i + pos
         asc = ord(x)
+        if x not in "0123456789 JKLMNOPQR ]-/|!@":
+            print("*** card character not in whitelist", x)
+            sys.exit()
         if 47 < asc < 58:
             val = int(x)
             M[n] = val
             F[n] = 0
-        if x == "]":
+        if x == "]" or x == "-":
             M[n] = 0
             F[n] = 1
+        if x == "/":
+            M[n] = 1
+            F[n] = 0
         if x == "|":
             #print("RM ***************", n)
             M[n] = RM
@@ -301,6 +307,7 @@ while True:
         for i in range(2, 12):
             CMD.write(str(M[PC+i]))
         CMD.write("\n")
+        CMD.flush()
     if (M[PC], M[PC+1]) not in known:
         print()
         print("*** Error: op code not implemented:", M[PC], M[PC+1], M[PC+2:PC+12], "PC = ", PC)
@@ -397,6 +404,24 @@ while True:
             # some debugger commands when system has been halted:
             if inp[0] == "d":   # save memory dump
                 dumpmem()
+            if inp[0] == "e":   # examine memory
+                # "/" means second parameter is an address offset
+                if "/" in inp:
+                    inp = inp.replace("/", " ")
+                    is_range = True
+                else:
+                    is_range = False
+
+                try:    # two addresses
+                    start, end = [int(_) for _ in inp[1:].split()]
+                except: # single location
+                    start = int(inp[1:])
+                    end = start
+
+                if is_range:
+                    end += start - 1
+                for i in range(start, end + 1):
+                    print("%5u: %1u %2u" % (i, F[i], M[i]))
             if inp[0] == "s":   # show current sense switch settings
                 sw_out = "".join(["1" if q else "0" for q in SENSE_SW])
                 print("sense switches: " + sw_out)
@@ -410,6 +435,7 @@ while True:
             if inp[0] == "h":   # print help
                 print("    Available commands when system is halted:")
                 print("      d        save memory dump")
+                print("      e        examine memory")
                 print("      s        show current sense switch settings")
                 print("      t        toggle a sense switch with t1, t2, t3, t4")
                 print("      q        quit emulator")
