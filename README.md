@@ -2,11 +2,21 @@
 
 ## Py1620 (IBM 1620 emulator)
 
-This [IBM 1620](https://en.wikipedia.org/wiki/IBM_1620) emulator in Python can now run the famous IBM 1620 baseball game ("base.txt"). Also included are the [Computer History Museum](https://computerhistory.org/)'s [Power of Two](https://github.com/IBM-1620/Junior/blob/master/diagnostics/binaries/APP_Power_Of_2.cmem) demo program, 2-D Tic-Tac-Toe (11.0.013; "tic.txt") from the 1620 General Program Library, and "99 Bottles of Beer" by Chuck Guzis (2005; "beer.txt").
+This [IBM 1620](https://en.wikipedia.org/wiki/IBM_1620) emulator in Python can now run the famous IBM 1620 baseball game ("base.txt"). Also included are the [Computer History Museum](https://computerhistory.org/)'s [Power of Two](https://github.com/IBM-1620/Junior/blob/master/diagnostics/binaries/APP_Power_Of_2.cmem) demo program, 2-D tic-tac-toe (11.0.013; "tic.txt") from the 1620 General Program Library, and "99 Bottles of Beer" by Chuck Guzis (2005; "beer.txt").
 
-Usage:
+### Usage
 
-```python3 py1620.py [card deck input file]```
+```python3 py1620.py [card deck input file] [sense switch settings]```
+
+E.g., to run the baseball game with sense switch 3 set to on (= play only a single game):
+
+```python3 py1620.py base.txt 0010```
+
+To run the slot machine / one-armed bandit, playing for 50 cents (sense switch 4):
+
+```python3 py1620.py band.txt 0001```
+
+Without any arguments, the tic-tac-toe game is run.
 
 By default, terminal output speed is now limited to 10 characters per second like a typewriter on a real IBM 1620.
 

@@ -4,7 +4,7 @@ import sys, time
 from array import array
 
 DEBUG = False   # log commands to cmd.txt?
-SLOW = True     # realistic output speed (10 cps)?
+SLOW  = True    # realistic output speed (10 cps)?
 
 if len(sys.argv) > 1 and sys.argv[1] == "pow":
     CMEM = True     # read from CMEM file
@@ -23,6 +23,11 @@ CMEM_FILE = "APP_Power_Of_2.cmem"
 # default setting of sense switches
 
 SENSE_SW = [False, False, False, False]
+if len(sys.argv) > 2:
+    if len(sys.argv[2]) != 4:
+        print("*** length of sense switch argument is not 4!")
+    SENSE_SW = [True if q != "0" else False for q in sys.argv[2]]
+    #print(SENSE_SW)
 
 # CPU trace output file
 if DEBUG:
