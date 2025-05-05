@@ -3,8 +3,9 @@
 import sys, time
 from array import array
 
-DEBUG = False   # log commands to cmd.txt?
-SLOW  = True    # realistic output speed (10 cps)?
+DEBUG = False       # log commands to cmd.txt?
+SLOW  = True        # realistic output speed (10 cps)?
+SINGLE_STEP = False # single-step/manual mode
 
 if len(sys.argv) > 1 and sys.argv[1] == "pow":
     CMEM = True     # read from CMEM file
@@ -184,13 +185,28 @@ def getim(x):
     else:
         return val
 
+# get immediate value (stopping at flag)
+def getimflag(x):
+    s = ""
+    for i in range(4, -1, -1):
+        s = str(M[x + i]) + s
+        if F[x + i] and i < 4:
+            break
+    s = "".join(s)
+    val = int(s)
+    if F[x+4]:
+        return -val
+    else:
+        return val
+
 # get number field
 def getnum(x):
     s = ""
     x2 = getim(x)
+    start = x2
     while True:
         s = str(M[x2]) + s
-        if F[x2] and x2 != x: break
+        if F[x2] and x2 != start: break
         x2 -= 1
     val = int(s)
     if F[getim(x)]:
@@ -217,7 +233,8 @@ def setnum(x, val, digits = None):
         s = "%u" % val
     if digits != None:
         digdiff = len("%u" % digits) - len(s)
-        s = "0" * digdiff + s
+        if digdiff > 0:
+            s = "0" * digdiff + s
 
     sz = max(2, len(s))
 
@@ -274,6 +291,8 @@ def dumpmem():
 
 # debugger prompt
 def debugger(prompt = "debug"):
+    global SINGLE_STEP
+
     while True:
         inp = input(prompt + "> ").strip()
         if len(inp) == 0:
@@ -309,12 +328,21 @@ def debugger(prompt = "debug"):
             print("sense switches now: " + sw_out)
         if inp[0] == "q":   # quit emulator
             sys.exit()
+        if inp[0] == "m":   # manual mode (= single-step mode)
+            SINGLE_STEP = True
+        if inp[0] == "a":   # auto mode
+            SINGLE_STEP = False
+        if inp[0] == "c":   # continue
+            break
         if inp[0] == "h":   # print help
             print("    Available commands when system is halted:")
             print("      d        save memory dump")
             print("      e        examine memory")
             print("      s        show current sense switch settings")
             print("      t        toggle a sense switch with t1, t2, t3, t4")
+            print("      m        manual mode (= single-step mode)")
+            print("      a        auto mode")
+            print("      c        continue (or just press Return)")
             print("      q        quit emulator")
 
 #show()
@@ -341,11 +369,36 @@ def set_ind(x):
     else:
         IND["HEQ"] = False
 
+# pretty-print command arguments
+def show_args(x):
+    out = ""
+    for i in x:
+        out += str(i)
+    out = out[:5] + " " + out[5:]
+    return out
+
+WATCHED = -1      # watches a memory address for changes if >= 0
+WATCH_LAST = -1   # last contents of watched address
+BREAKPOINT = -1   # set breakpoints here
+
 while True:
-    #if PC == 12:   # set breakpoints here
-    #    dumpmem()
-    #    print("*** breakpoint at PC =", PC)
-    #    debugger("break")
+
+    if WATCHED > -1:    # watch a memory location for changes
+        new_watch = "%1u %2u" % (F[WATCHED], M[WATCHED])
+        if new_watch != WATCH_LAST:
+            if WATCH_LAST == -1:
+                WATCH_LAST = new_watch
+            else:
+                print("*** memory change at", WATCHED, "detected at PC =", PC)
+                print("old:", WATCH_LAST)
+                print("new:", new_watch)
+                WATCH_LAST = new_watch
+                debugger("watch")
+
+    if PC == BREAKPOINT:
+        dumpmem()
+        print("*** breakpoint at PC =", PC)
+        debugger("break")
 
     if DEBUG:
         CMD.write(str(PC) + ": ")
@@ -354,9 +407,14 @@ while True:
             CMD.write(str(M[PC+i]))
         CMD.write("\n")
         CMD.flush()
+
+    if SINGLE_STEP:
+        print("*** single-step, PC = ", PC, ":", cmd.get(str(M[PC]) + str(M[PC+1])), show_args(M[PC+2:PC+12]))
+        debugger("step")
+
     if (M[PC], M[PC+1]) not in known:
         print()
-        print("*** Error: op code not implemented:", M[PC], M[PC+1], M[PC+2:PC+12], "PC = ", PC)
+        print("*** Error: op code not implemented:", M[PC], M[PC+1], show_args(M[PC+2:PC+12]), "PC = ", PC)
         if DEBUG:
             dumpmem()
         debugger("error")
@@ -365,15 +423,15 @@ while True:
         p = getnum(PC+2)
         q = getnum(PC+7)
         #print("***",p," ",q," ")
-        setnum(getim(PC+2), p + q)
+        setnum(getim(PC+2), p + q, digits = 10**(getlen(PC+2) - 1))
         set_ind(p + q)
 
     # AM
     if M[PC] == 1 and M[PC+1] == 1:
         p = getnum(PC+2)
-        q = getim(PC+7)
+        q = getimflag(PC+7)
         #print("***",p," ",q," ")
-        setnum(getim(PC+2), p + q)
+        setnum(getim(PC+2), p + q, digits = 10**(getlen(PC+2) - 1))
         set_ind(p + q)
 
     # M
@@ -390,18 +448,18 @@ while True:
     # MM
     if M[PC] == 1 and M[PC+1] == 3:
         p = getnum(PC+2)
-        q = getim(PC+7)
+        q = getimflag(PC+7)
         for i in range(80, 100):
             M[i] = 0
             F[i] = 0
         #print("***",p," ",q," ")
-        setnum(99, p * q, digits = 10** (getlen(PC+2) + 4))
+        setnum(99, p * q, digits = 10** (getlen(PC+2)))
         set_ind(p * q)
 
     # CM
     if M[PC] == 1 and M[PC+1] == 4:
         p = getnum(PC+2)
-        q = getim(PC+7)
+        q = getimflag(PC+7)
         #print("CM:",p,q)
         if p > q:
             IND["HIGH"] = True
@@ -451,15 +509,15 @@ while True:
         p = getnum(PC+2)
         q = getnum(PC+7)
         #print("***",p," ",q," ")
-        setnum(getim(PC+2), p - q, digits = p)
+        setnum(getim(PC+2), p - q, digits = 10**(getlen(PC+2) - 1))
         set_ind(p - q)
 
     # SM
     if M[PC] == 1 and M[PC+1] == 2:
         p = getnum(PC+2)
-        q = getim(PC+7)
+        q = getimflag(PC+7)
         #print("SM: ",p," ",q," ")
-        setnum(getim(PC+2), p - q, digits = p)
+        setnum(getim(PC+2), p - q, digits = 10**(getlen(PC+2) - 1))
         set_ind(p - q)
 
     # SF
@@ -587,7 +645,7 @@ while True:
     if M[PC] == 2 and M[PC+1] == 7:
         pos = getim(PC+2)
         q = getnum(PC+7)
-        setnum(pos - 1, q)
+        setnum(pos - 1, q, digits = 10**(getlen(PC+7) - 1))
         BRANCH_BACK = PC + 12
         PC = pos
         continue
