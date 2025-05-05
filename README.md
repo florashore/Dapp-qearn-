@@ -92,7 +92,7 @@ YOUR PLAY
 
 Setting all sense switches to off (with "t4" in the debugger in the run below) prints your account balance and resets the account to zero:
 ```
-$ p py1620.py band.txt 0001
+$ python3 py1620.py band.txt 0001
 
 TYPE A 10-DIGIT NUMBER, THEN HIT RELEASE + START.
 1234512345
