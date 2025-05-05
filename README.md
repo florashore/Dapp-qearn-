@@ -70,7 +70,6 @@ SQUARES NUMBERED AS FOLLOWS
 
 SW 1 ON FOR DATA,PUSH START
 *** HALT at 1350; press Return to continue; enter 'h' for help or 'q' to quit
-halt> 5
 halt> 
 
 NEW GAME
