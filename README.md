@@ -39,13 +39,13 @@ POWER OF 2 CALCULATOR
 
 N = 8
 
-2**8 = 2̅56
+2**8 = 256
 
 
 
 N = 100
 
-2**1̅00 = 1̅267650600228229401496703205376
+2**100 = 1267650600228229401496703205376
 ```
 
 ### Tic-Tac-Toe (default program)
@@ -57,8 +57,8 @@ The program is loaded from the punch card text file. When the computer loses, it
 ```
 $ python3 py1620.py
 
-*** System HALT at address 0; please press Return to continue
-
+*** HALT at 0; press Return to continue; enter 'h' for help or 'q' to quit
+halt> 
 
 SQUARES NUMBERED AS FOLLOWS
 
@@ -69,8 +69,9 @@ SQUARES NUMBERED AS FOLLOWS
 7  8  9
 
 SW 1 ON FOR DATA,PUSH START
-*** System HALT at address 1350; please press Return to continue
-
+*** HALT at 1350; press Return to continue; enter 'h' for help or 'q' to quit
+halt> 5
+halt> 
 
 NEW GAME
 YOUR PLAY 5
@@ -83,6 +84,81 @@ YOUR PLAY 6
    MY PLAY IS 4
 YOUR PLAY 7
  TIE GAME
+NEW GAME
+YOUR PLAY 
+```
+
+### One-armed bandit
+
+Setting all sense switches to off (with "t4" in the debugger in the run below) prints your account balance and resets the account to zero:
+```
+$ p py1620.py band.txt 0001
+
+TYPE A 10-DIGIT NUMBER, THEN HIT RELEASE + START.
+1234512345
+
+
+HERE ARE THE PAYOFFS. . .
+Ж  Ж  Ж    PAYS THE JACKPOT. . .  YOU WIN A 1620.
+$  $  $    PAYS 20 TO 1,
+X  X  X    PAYS 12 TO 1,
+Ж  Ж  X    PAYS  8 TO 1,
+$  $  X    PAYS  5 TO 1,
+Ж  X  X    PAYS  2 TO 1, AND
+$  X  X    PAYS  1 TO 1.
+     X REPRESENTS ANY SYMBOL OTHER THAN Ж OR $.
+
+TO PLAY FOR NICKELS, TURN ON SWITCH 1.
+TO PLAY FOR DIMES, TURN ON SWITCH 2.
+TO PLAY FOR QUARTERS, TURN ON SWITCH 3.
+TO PLAY FOR HALVES, TURN ON SWITCH 4.
+
+TO CHANGE PLAYERS AT ANY TIME, TURN ALL SWITCHES OFF AND HIT START.
+
+TO SPIN THE WHEELS, PUSH START WITH GREAT VIGOR.
+
+*** HALT at 1838; press Return to continue; enter 'h' for help or 'q' to quit
+halt> 
+=   Ж   Ж
+
+*** HALT at 1838; press Return to continue; enter 'h' for help or 'q' to quit
+halt> 
++   Ж   @
+
+*** HALT at 1838; press Return to continue; enter 'h' for help or 'q' to quit
+halt> 
+*   *   *	YOU WIN  $6.00
+
+*** HALT at 1838; press Return to continue; enter 'h' for help or 'q' to quit
+halt> 
++   @   =
+
+*** HALT at 1838; press Return to continue; enter 'h' for help or 'q' to quit
+halt> 
+*   @   *
+
+*** HALT at 1838; press Return to continue; enter 'h' for help or 'q' to quit
+halt> 
+@   =   +
+
+*** HALT at 1838; press Return to continue; enter 'h' for help or 'q' to quit
+halt> 
+$   $   =	YOU WIN  $2.50
+
+*** HALT at 1838; press Return to continue; enter 'h' for help or 'q' to quit
+halt> t4
+sense switches now: 0000
+halt> 
+
+YOU WON $5.00
+
+CHECK SWITCHES FOR YOUR BET.
+TO SPIN THE WHEELS, PUSH START WITH GREAT VIGOR.
+
+
+
+*** HALT at 1838; press Return to continue; enter 'h' for help or 'q' to quit
+halt> 
 ```
 
 ### Credits
