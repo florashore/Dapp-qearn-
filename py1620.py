@@ -355,6 +355,8 @@ def debugger(prompt = "debug"):
                 is_range = True
             else:
                 is_range = False
+            if "-" in inp:
+                inp = inp.replace("-", " ")
 
             try:    # two addresses
                 start, end = [int(_) for _ in inp[1:].split()]
