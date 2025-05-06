@@ -418,6 +418,7 @@ def debugger(prompt = "debug"):
             print("      a        auto mode")
             print("      c        continue (or just press Return)")
             print("      q        quit emulator")
+            print("    PC = %u; print current instruction with: e %u/12" % (PC, PC))
 
 #show()
 
