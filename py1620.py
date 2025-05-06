@@ -155,7 +155,7 @@ for l in c.splitlines():
     x,y = l.split(" ")
     cmd[x] = y.strip()
 
-# read a punch card line to pos
+# read a punch card line to pos (numeric)
 def cardline(pos):
     global CARDNUM, PC
 
@@ -201,6 +201,29 @@ def cardline(pos):
         if 73 < asc < 83:
             M[n] = -(73 - asc)
             F[n] = 1
+
+# read a punch card line to pos (alphanumeric)
+def cardline_alpha(pos):
+    global CARDNUM, PC
+
+    if IND["LASTCARD"]:
+        print("*** no more cards to read, halting at PC =", PC)
+        debugger("halt")
+
+    l = CF.readline().rstrip()
+    if l == "":
+        IND["LASTCARD"] = True
+    CARDNUM += 1
+    #print("*** reading alphanumeric punch card: ", CARDNUM)
+    #print(l, pos)
+    for i, x in enumerate(l):
+        n = 2 * i + pos - 1
+        #print(i,x,n)
+        if x == "|":
+            M[n+1] = RM
+            break
+        M[n]   = almer[x.upper()][0]
+        M[n+1] = almer[x.upper()][1]
 
 # Method 1 to get code into the emulator:
 # open a punch card file (in SIMH txt format)
@@ -575,15 +598,19 @@ while True:
     if M[PC] == 3 and M[PC+1] == 2:
         F[getim(PC+2)] = 1
 
-    # RA (TTY)
+    # RA
     if M[PC] == 3 and M[PC+1] == 7:
         n = getim(PC+2)
-        txt = input()
-        txt = txt.strip()
-        for x in txt:
-            M[n-1] = almer[x.upper()][0]
-            M[n] = almer[x.upper()][1]
-            n += 2
+        dev = M[PC + 9]
+        if dev == 5: # (punch card)
+            cardline_alpha(n)
+        if dev == 1: # TTY
+            txt = input()
+            txt = txt.strip()
+            for x in txt:
+                M[n-1] = almer[x.upper()][0]
+                M[n] = almer[x.upper()][1]
+                n += 2
 
     # RN
     if M[PC] == 3 and M[PC+1] == 6:
@@ -709,100 +736,99 @@ while True:
     # BI
     if M[PC] == 4 and M[PC+1] == 6:
         pos = getim(PC+2)
-        dev = getim(PC+7)
+        dev = 10 * M[PC+8] + M[PC+9]
         #print(dev)
-        if dev == 600:
+        if dev == 6:
             pass #print("read check", pos)
-        elif dev == 700:
+        elif dev == 7:
             pass #print("write check", pos)
-        elif dev == 900:
+        elif dev == 9:
             #print("card check", PC, pos)
             if IND["LASTCARD"]:
                 PC = pos
                 continue
-        elif dev == 1100:
+        elif dev == 11:
             if IND["HIGH"]:
                 PC = pos
                 continue
-        elif dev == 1200:
+        elif dev == 12:
             if IND["EQ"]:
                 PC = pos
                 continue
-        elif dev == 1300:
+        elif dev == 13:
             if IND["HEQ"]:
                 PC = pos
                 continue
-        elif dev == 1400:
+        elif dev == 14:
             pass #print("overflow check", pos)
-        elif dev == 1600:
+        elif dev == 16:
             pass #print("mem check", pos)
-        elif dev == 1700:
+        elif dev == 17:
             pass #print("mem check 2", pos)
-        elif dev <= 400:
-            if dev == 100 and SENSE_SW[0]:
+        elif dev <= 4:
+            if dev == 1 and SENSE_SW[0]:
                 PC = pos
                 continue
-            if dev == 200 and SENSE_SW[1]:
+            if dev == 2 and SENSE_SW[1]:
                 PC = pos
                 continue
-            if dev == 300 and SENSE_SW[2]:
+            if dev == 3 and SENSE_SW[2]:
                 PC = pos
                 continue
-            if dev == 400 and SENSE_SW[3]:
+            if dev == 4 and SENSE_SW[3]:
                 PC = pos
                 continue
         else:
-            print("*** BI fail", pos, dev)
+            print("*** BI fail", PC, pos, dev)
             debugger("halt")
 
     # BNI
     if M[PC] == 4 and M[PC+1] == 7:
         pos = getim(PC+2)
-        dev = getim(PC+7)
-        jump = True
+        dev = 10 * M[PC+8] + M[PC+9]
         #print(dev)
-        if dev == 600:
+        if dev == 6:
             pass #print("read check", pos)
-        elif dev == 700:
+        elif dev == 7:
             pass #print("write check", pos)
-        elif dev == 900:
+        elif dev == 9:
             #print("card check", PC, pos)
             if not IND["LASTCARD"]:
                 PC = pos
                 continue
-        elif dev == 1100:
+        elif dev == 11:
             if not IND["HIGH"]:
                 PC = pos
                 continue
-        elif dev == 1200:
+        elif dev == 12:
             if not IND["EQ"]:
                 PC = pos
                 continue
-        elif dev == 1300:
+        elif dev == 13:
             if not IND["HEQ"]:
                 PC = pos
                 continue
-        elif dev == 1400:
+        elif dev == 14:
             pass #print("overflow check", pos)
-        elif dev == 1600:
+        elif dev == 16:
             pass #print("mem check", pos)
-        elif dev == 1700:
+        elif dev == 17:
             pass #print("mem check 2", pos)
-        elif dev <= 400:
-            if dev == 100 and not SENSE_SW[0]:
+        elif dev <= 4:
+            if dev == 1 and not SENSE_SW[0]:
                 PC = pos
                 continue
-            if dev == 200 and not SENSE_SW[1]:
+            if dev == 2 and not SENSE_SW[1]:
                 PC = pos
                 continue
-            if dev == 300 and not SENSE_SW[2]:
+            if dev == 3 and not SENSE_SW[2]:
                 PC = pos
                 continue
-            if dev == 400 and not SENSE_SW[3]:
+            if dev == 4 and not SENSE_SW[3]:
                 PC = pos
                 continue
         else:
-            print("*** BNI fail", pos, dev)
+            print("*** BNI fail", PC, pos, dev)
             debugger("halt")
 
     # B
