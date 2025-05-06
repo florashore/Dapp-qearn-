@@ -4,7 +4,7 @@ import sys, time
 from array import array
 
 DEBUG = False       # log commands to cmd.txt?
-SLOW  = True        # realistic output speed (10 cps)?
+SLOW  = 0        # realistic output speed (10 cps)?
 SINGLE_STEP = False # single-step/manual mode
 
 if len(sys.argv) > 1 and sys.argv[1] == "pow":
@@ -49,13 +49,14 @@ BRANCH_BACK = 0     # saved subroutine return address
 class MyArray:
     def __init__(s, x):
         s.arr = array('H', [0] * x)
+        s.size = x
 
     def __getitem__(s, x):
-        x = x % MSIZE
+        x = x % s.size
         return s.arr[x]
 
     def __setitem__(s, x, y):
-        x = x % MSIZE
+        x = x % s.size
         s.arr[x] = y
 
 # create memory and flag bit arrays
