@@ -167,6 +167,7 @@ def cardline(pos):
     if l == "":
         IND["LASTCARD"] = True
     CARDNUM += 1
+    #CMD.write(l + "\n")
     #print("*** reading punch card: ", CARDNUM)
     #print(l, pos)
     for i, x in enumerate(l):
@@ -587,11 +588,11 @@ while True:
     # RN
     if M[PC] == 3 and M[PC+1] == 6:
         pos = getim(PC+2)
-        dev = str(getim(PC+7))[-3]
-        if dev == "5": # (punch card)
+        dev = M[PC + 9]
+        if dev == 5: # (punch card)
             cardline(pos)
             #print("reading", pos)
-        if dev == "1": # TTY
+        if dev == 1: # TTY
             s = input()
             for n, x in enumerate(s):
                 M[pos+n] = int(x)
@@ -633,8 +634,8 @@ while True:
     # DN
     if M[PC] == 3 and M[PC+1] == 5:
         start = getim(PC+2)
-        dev = getim(PC+7)
-        if dev == 100:
+        dev = M[PC + 9]
+        if dev == 1:
             for i in range(start, MSIZE):
                 if F[i]:
                     print(str(M[i]) + OVER, end="")
