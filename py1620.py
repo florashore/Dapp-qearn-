@@ -45,9 +45,22 @@ CH_UNDEF = "\u0416" # undefined character
 CARDNUM = 0         # current card number
 BRANCH_BACK = 0     # saved subroutine return address
 
+# define a circular array (because memory on the IBM 1620 is circular)
+class MyArray:
+    def __init__(s, x):
+        s.arr = array('H', [0] * x)
+
+    def __getitem__(s, x):
+        x = x % MSIZE
+        return s.arr[x]
+
+    def __setitem__(s, x, y):
+        x = x % MSIZE
+        s.arr[x] = y
+
 # create memory and flag bit arrays
-M = array('H', [0] * MSIZE)
-F = array('H', [0] * MSIZE)
+M = MyArray(MSIZE)
+F = MyArray(MSIZE)
 
 # create indicator status flags
 IND = {}
@@ -447,8 +460,8 @@ def set_ind(x):
 # pretty-print command arguments
 def show_args(x):
     out = ""
-    for i in x:
-        out += str(i)
+    for i in range(10):
+        out += str(M[x + i])
     out = out[:5] + " " + out[5:]
     return out
 
@@ -484,12 +497,12 @@ while True:
         CMD.flush()
 
     if SINGLE_STEP:
-        print("*** single-step, PC = ", PC, ":", cmd.get(str(M[PC]) + str(M[PC+1])), show_args(M[PC+2:PC+12]))
+        print("*** single-step, PC = ", PC, ":", cmd.get(str(M[PC]) + str(M[PC+1])), show_args(PC+2))
         debugger("step")
 
     if (M[PC], M[PC+1]) not in known:
         print()
-        print("*** Error: op code not implemented:", M[PC], M[PC+1], show_args(M[PC+2:PC+12]), "PC = ", PC)
+        print("*** Error: op code not implemented:", M[PC], M[PC+1], show_args(PC+2), "PC = ", PC)
         if DEBUG:
             dumpmem()
         debugger("error")
@@ -688,7 +701,6 @@ while True:
         q = getim(PC+7)
         #print("TR: ", p, q)
         while True:
-            p = p % MSIZE
             M[p] = M[q]
             F[p] = F[q]
             if M[q] == RM:
@@ -861,7 +873,6 @@ while True:
         p = getim(PC+2)
         q = getim(PC+7)
         #print(M[PC:PC+12])
-        q = q%MSIZE # *** is this really needed?
         if M[q] != RM:
             PC = p
             continue
