@@ -4,7 +4,7 @@ import sys, time
 from array import array
 
 DEBUG = False       # log commands to cmd.txt?
-SLOW  = 0        # realistic output speed (10 cps)?
+SLOW  = False       # realistic output speed (10 cps)?
 SINGLE_STEP = False # single-step/manual mode
 
 if len(sys.argv) > 1 and sys.argv[1] == "pow":
