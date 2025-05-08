@@ -30,6 +30,10 @@ if len(sys.argv) > 2:
     SENSE_SW = [True if q != "0" else False for q in sys.argv[2]]
     #print(SENSE_SW)
 
+# card punch output file
+if len(sys.argv) > 3:
+    OUTFILE = open(sys.argv[3], "w")
+
 # CPU trace output file
 if DEBUG:
     CMD = open("cmd.txt", "w")  # output trace to text file
@@ -639,23 +643,37 @@ while True:
             for n, x in enumerate(s):
                 M[pos+n] = int(x)
 
-    # WA (TTY)
+    # WA
     if M[PC] == 3 and M[PC+1] == 9:
         n = getim(PC+2)-1
-        while True:
-            if SLOW:
-                sys.stdout.flush()
-                time.sleep(.1)
-            c1, c2 = M[n], M[n+1]
-            out = CH_UNDEF      # undefined character
-            if c1 == RM or c2 == RM:
-                break
-            for k in almer.keys():
-                if almer[k][0] == c1 and almer[k][1] == c2:
-                    out = k
-            print(out, end="")
-            n += 2
-        #print()
+        dev = 10 * M[PC+8] + M[PC+9]
+        if dev == 1:    # TTY
+            while True:
+                if SLOW:
+                    sys.stdout.flush()
+                    time.sleep(.1)
+                c1, c2 = M[n], M[n+1]
+                out = CH_UNDEF      # undefined character
+                if c1 == RM or c2 == RM:
+                    break
+                for k in almer.keys():
+                    if almer[k][0] == c1 and almer[k][1] == c2:
+                        out = k
+                print(out, end="")
+                n += 2
+        if dev == 4:    # card punch
+            while True:
+                c1, c2 = M[n], M[n+1]
+                out = CH_UNDEF      # undefined character
+                if c1 == RM or c2 == RM:
+                    break
+                for k in almer.keys():
+                    if almer[k][0] == c1 and almer[k][1] == c2:
+                        out = k
+                OUTFILE.write(out)
+                n += 2
+            OUTFILE.write("\n")
+            OUTFILE.flush()
 
     # WN (TTY)
     if M[PC] == 3 and M[PC+1] == 8:
