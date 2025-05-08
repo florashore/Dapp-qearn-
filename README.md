@@ -226,7 +226,7 @@ Each card is fed into the punch six times: 3x the normal way to print the upper 
 
 ```
 $ python3 py1620.py block.txt 0000 output1.txt
-4800000000004911900000003600014001004600024004003600060005001500001000083800000005004900000
+
 *** HALT at 0; press Return to continue; enter 'h' for help or 'q' to quit
 halt> 
 
@@ -294,7 +294,7 @@ $ python3 block_decode.py output1.txt
 
 ```
 $ python3 py1620.py block.txt 0000 output2.txt
-4800000000004911900000003600014001004600024004003600060005001500001000083800000005004900000
+
 *** HALT at 0; press Return to continue; enter 'h' for help or 'q' to quit
 halt> 
 

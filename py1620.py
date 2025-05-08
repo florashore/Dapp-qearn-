@@ -505,14 +505,17 @@ while True:
         print("*** single-step, PC = ", PC, ":", cmd.get(str(M[PC]) + str(M[PC+1])), show_args(PC+2))
         debugger("step")
 
-    if (M[PC], M[PC+1]) not in known:
+    OP = M[PC], M[PC+1]
+
+    if OP not in known:
         print()
         print("*** Error: op code not implemented:", M[PC], M[PC+1], show_args(PC+2), "PC = ", PC)
         if DEBUG:
             dumpmem()
         debugger("error")
+
     # A
-    if M[PC] == 2 and M[PC+1] == 1:
+    if OP == (2, 1):
         p = getnum(PC+2)
         q = getnum(PC+7)
         #print("***",p," ",q," ")
@@ -520,7 +523,7 @@ while True:
         set_ind(p + q)
 
     # AM
-    if M[PC] == 1 and M[PC+1] == 1:
+    if OP == (1, 1):
         p = getnum(PC+2)
         q = getimflag(PC+7)
         #print("***",p," ",q," ")
@@ -528,7 +531,7 @@ while True:
         set_ind(p + q)
 
     # M
-    if M[PC] == 2 and M[PC+1] == 3:
+    if OP == (2, 3):
         p = getnum(PC+2)
         q = getnum(PC+7)
         for i in range(80, 100):
@@ -539,7 +542,7 @@ while True:
         set_ind(p * q)
 
     # MM
-    if M[PC] == 1 and M[PC+1] == 3:
+    if OP == (1, 3):
         p = getnum(PC+2)
         q = getimflag(PC+7)
         for i in range(80, 100):
@@ -550,7 +553,7 @@ while True:
         set_ind(p * q)
 
     # CM
-    if M[PC] == 1 and M[PC+1] == 4:
+    if OP == (1, 4):
         p = getnum(PC+2)
         q = getimflag(PC+7)
         #print("CM:",p,q)
@@ -568,7 +571,7 @@ while True:
             IND["HEQ"] = False
 
     # C
-    if M[PC] == 2 and M[PC+1] == 4:
+    if OP == (2, 4):
         p = getnum(PC+2)
         q = getnum(PC+7)
         if p > q:
@@ -585,11 +588,11 @@ while True:
             IND["HEQ"] = False
 
     # CF
-    if M[PC] == 3 and M[PC+1] == 3:
+    if OP == (3, 3):
         F[getim(PC+2)] = 0
 
     # H
-    if M[PC] == 4 and M[PC+1] == 8:
+    if OP == (4, 8):
         #break
         print()
         print("*** HALT at %u; press Return to continue; enter 'h' for help or 'q' to quit" % PC)
@@ -598,7 +601,7 @@ while True:
         continue
 
     # S
-    if M[PC] == 2 and M[PC+1] == 2:
+    if OP == (2, 2):
         p = getnum(PC+2)
         q = getnum(PC+7)
         #print("***",p," ",q," ")
@@ -606,7 +609,7 @@ while True:
         set_ind(p - q)
 
     # SM
-    if M[PC] == 1 and M[PC+1] == 2:
+    if OP == (1, 2):
         p = getnum(PC+2)
         q = getimflag(PC+7)
         #print("SM: ",p," ",q," ")
@@ -614,11 +617,11 @@ while True:
         set_ind(p - q)
 
     # SF
-    if M[PC] == 3 and M[PC+1] == 2:
+    if OP == (3, 2):
         F[getim(PC+2)] = 1
 
     # RA
-    if M[PC] == 3 and M[PC+1] == 7:
+    if OP == (3, 7):
         n = getim(PC+2)
         dev = M[PC + 9]
         if dev == 5: # (punch card)
@@ -632,7 +635,7 @@ while True:
                 n += 2
 
     # RN
-    if M[PC] == 3 and M[PC+1] == 6:
+    if OP == (3, 6):
         pos = getim(PC+2)
         dev = M[PC + 9]
         if dev == 5: # (punch card)
@@ -644,7 +647,7 @@ while True:
                 M[pos+n] = int(x)
 
     # WA
-    if M[PC] == 3 and M[PC+1] == 9:
+    if OP == (3, 9):
         n = getim(PC+2)-1
         dev = M[PC+9]
         if dev == 1:    # TTY
@@ -676,7 +679,7 @@ while True:
             OUTFILE.flush()
 
     # WN (TTY)
-    if M[PC] == 3 and M[PC+1] == 8:
+    if OP == (3, 8):
         n = getim(PC+2)
         while True:
             if SLOW:
@@ -692,7 +695,7 @@ while True:
             n += 1
 
     # DN
-    if M[PC] == 3 and M[PC+1] == 5:
+    if OP == (3, 5):
         start = getim(PC+2)
         dev = M[PC + 9]
         if dev == 1:
@@ -703,7 +706,7 @@ while True:
                     print(M[i], end="")
 
     # TF
-    if M[PC] == 2 and M[PC+1] == 6:
+    if OP == (2, 6):
         p = getim(PC+2)
         q = getim(PC+7)
         while True:
@@ -715,7 +718,7 @@ while True:
             q -= 1
 
     # TR
-    if M[PC] == 3 and M[PC+1] == 1:
+    if OP == (3, 1):
         p = getim(PC+2)
         q = getim(PC+7)
         #print("TR: ", p, q)
@@ -728,7 +731,7 @@ while True:
             q += 1
 
     # TFM
-    if M[PC] == 1 and M[PC+1] == 6:
+    if OP == (1, 6):
         p = getim(PC+2)
         q = PC+11
         while True:
@@ -740,7 +743,7 @@ while True:
             q -= 1
 
     # BTM
-    if M[PC] == 1 and M[PC+1] == 7:
+    if OP == (1, 7):
         pos = getim(PC+2)
         for i in range(4, -1, -1):
             M[pos-5+i] = M[PC+7+i]
@@ -752,7 +755,7 @@ while True:
         continue
 
     # BT
-    if M[PC] == 2 and M[PC+1] == 7:
+    if OP == (2, 7):
         pos = getim(PC+2)
         q = getnum(PC+7)
         setnum(pos - 1, q, digits = 10**(getlen(PC+7) - 1))
@@ -761,12 +764,12 @@ while True:
         continue
 
     # BB
-    if M[PC] == 4 and M[PC+1] == 2:
+    if OP == (4, 2):
         PC = BRANCH_BACK
         continue
 
     # BI
-    if M[PC] == 4 and M[PC+1] == 6:
+    if OP == (4, 6):
         pos = getim(PC+2)
         dev = 10 * M[PC+8] + M[PC+9]
         #print(dev)
@@ -815,7 +818,7 @@ while True:
             debugger("halt")
 
     # BNI
-    if M[PC] == 4 and M[PC+1] == 7:
+    if OP == (4, 7):
         pos = getim(PC+2)
         dev = 10 * M[PC+8] + M[PC+9]
         #print(dev)
@@ -864,14 +867,14 @@ while True:
             debugger("halt")
 
     # B
-    if M[PC] == 4 and M[PC+1] == 9:
+    if OP == (4, 9):
         pos = getim(PC+2)
         PC = pos
         #print("B PC:", PC)
         continue
 
     # BD
-    if M[PC] == 4 and M[PC+1] == 3:
+    if OP == (4, 3):
         pos = getim(PC+2)
         q = getim(PC+7)
         if M[q]:
@@ -880,7 +883,7 @@ while True:
             continue
 
     # BNF
-    if M[PC] == 4 and M[PC+1] == 4:
+    if OP == (4, 4):
         pos = getim(PC+2)
         q = getim(PC+7)
         if not F[q]:
@@ -888,7 +891,7 @@ while True:
             continue
 
     # BNR
-    if M[PC] == 4 and M[PC+1] == 5:
+    if OP == (4, 5):
         p = getim(PC+2)
         q = getim(PC+7)
         #print(M[PC:PC+12])
@@ -897,21 +900,21 @@ while True:
             continue
 
     # TD
-    if M[PC] == 2 and M[PC+1] == 5:
+    if OP == (2, 5):
         p = getim(PC+2)
         q = getim(PC+7)
         M[p] = M[q]
         F[p] = F[q]
 
     # TDM
-    if M[PC] == 1 and M[PC+1] == 5:
+    if OP == (1, 5):
         p = getim(PC+2)
         q = getim(PC+7)
         M[p] = abs(q)
         F[p] = F[PC+11]
 
     # K
-    if M[PC] == 3 and M[PC+1] == 4:
+    if OP == (3, 4):
         dev = M[PC+9]
         if dev == 1:
             if M[PC+11] == 1:
