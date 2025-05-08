@@ -912,7 +912,7 @@ while True:
 
     # K
     if M[PC] == 3 and M[PC+1] == 4:
-        dev = 10 * M[PC+8] + M[PC+9]
+        dev = M[PC+9]
         if dev == 1:
             if M[PC+11] == 1:
                 print(" ", end="")
