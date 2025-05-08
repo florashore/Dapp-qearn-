@@ -359,11 +359,26 @@ $ python3 block_decode.py output2.txt
 .............*.......*...*....***....******..*...*...*****....****..............
 ```
 
+#### Output as PNG images
+
+With block_decode_image.py, the output can also be converted to an image of a punch card (needs PIL):
+
+```
+python3 block_decode_image.py output1.txt block_card1.png
+python3 block_decode_image.py output2.txt block_card2.png
+```
+
+![punch card 1](block_card1.png "punch card 1")
+
+![punch card 2](block_card2.png "punch card 2")
+
 ### Credits
 
 The IBM 1403 printer font is available at [ibm-1401.info](http://ibm-1401.info/Sched2008December.html#1403-Font).
 
 [IBM 1620 image](https://commons.wikimedia.org/wiki/File:IBM_1620_console_typewriter.mw.jpg) by Marcin Wichary, CC BY 2.0 <https://creativecommons.org/licenses/by/2.0>, via Wikimedia Commons
+
+IBM punch card  image from [Douglas W. Jones's punched card collection](https://homepage.divms.uiowa.edu/~jones/cards/collection/i-onefield.shtml).
 
 ### Further reading
 
