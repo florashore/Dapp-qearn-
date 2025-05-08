@@ -646,7 +646,7 @@ while True:
     # WA
     if M[PC] == 3 and M[PC+1] == 9:
         n = getim(PC+2)-1
-        dev = 10 * M[PC+8] + M[PC+9]
+        dev = M[PC+9]
         if dev == 1:    # TTY
             while True:
                 if SLOW:
