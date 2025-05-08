@@ -220,7 +220,7 @@ halt>
 
 The block.txt program outputs block letters on punch cards, with either one or two lines of text on a card and up to 10 characters per line.
 
-Each card is fed into the punch six times: 3x the normal way to print the upper half; then 3x flipped and rotated to print the lower half. When setting the numer of cards to 1, this will produce a six-line output file from the emulator.
+Each card is fed into the punch six times: 3x the normal way to print the upper half; then 3x flipped and rotated to print the lower half. When setting the number of cards to 1, this will produce a six-line output file from the emulator.
 
 #### One line of text
 
