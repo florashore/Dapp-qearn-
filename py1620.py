@@ -894,16 +894,17 @@ while True:
 
     # K
     if M[PC] == 3 and M[PC+1] == 4:
-        q = getim(PC+7)
-        if q == 101:
-            print(" ", end="")
-        if q == 102:
-            print()
-        if q == 108:
-            print("\t", end="")
-        if SLOW:
-            sys.stdout.flush()
-            time.sleep(.1)
+        dev = 10 * M[PC+8] + M[PC+9]
+        if dev == 1:
+            if M[PC+11] == 1:
+                print(" ", end="")
+            if M[PC+11] == 2:
+                print()
+            if M[PC+11] == 8:
+                print("\t", end="")
+            if SLOW:
+                sys.stdout.flush()
+                time.sleep(.1)
 
     PC += 12
     #print("new PC: ", PC)
