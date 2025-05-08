@@ -6,7 +6,9 @@ This [IBM 1620](https://en.wikipedia.org/wiki/IBM_1620) emulator in Python can n
 
 ### Usage
 
-```python3 py1620.py [card deck input file] [sense switch settings (optional)]```
+```python3 py1620.py input.txt [0000] [output.txt]```
+
+where input.txt is a card reader input file in SIMH format, 0000 are the (optional) sense switch settings, and output.txt is the card punch output file (optional).
 
 E.g., to run the baseball game with sense switch 3 set to on (= play only a single game):
 
@@ -212,6 +214,149 @@ NO MORE BEER.
 
 *** HALT at 606; press Return to continue; enter 'h' for help or 'q' to quit
 halt> 
+```
+
+### Block letters on punch cards
+
+The block.txt program outputs block letters on punch cards, with either one or two lines of text on a card and up to 10 characters per line.
+
+Each card is fed into the punch six times: 3x the normal way to print the upper half; then 3x flipped and rotated to print the lower half. When setting the numer of cards to 1, this will produce a six-line output file from the emulator.
+
+#### One line of text
+
+```
+$ python3 py1620.py block.txt 0000 output1.txt
+4800000000004911900000003600014001004600024004003600060005001500001000083800000005004900000
+*** HALT at 0; press Return to continue; enter 'h' for help or 'q' to quit
+halt> 
+
+SET CENTERING SWITCHES BEFORE TYPING EACH LINE
+SW1 ON-NO UPPER CENTERING	SW2 ON-NO LOWER CENTERING
+TEN CHARACTER LIMIT PER LINE
+
+NO. OF 2-LINE SETS-0
+	NO. OF 1-LINE SETS-1
+
+
+1-LINE SETS-
+SET NO. 01	FIRST LINE-hello
+
+NO. OF CARDS-1
+
+
+LOAD 003 CARDS(12-EDGE 1ST, FACE UP)
+RELOAD SAME WAY-PUSH START
+*** HALT at 15716; press Return to continue; enter 'h' for help or 'q' to quit
+halt> 
+
+RELOAD SAME WAY-PUSH START
+*** HALT at 15716; press Return to continue; enter 'h' for help or 'q' to quit
+halt> 
+
+
+FLIP CARDS(PUT 9-EDGE 1ST, FACE DOWN)-PUSH START
+*** HALT at 15716; press Return to continue; enter 'h' for help or 'q' to quit
+halt> 
+
+RELOAD SAME WAY-PUSH START
+*** HALT at 15716; press Return to continue; enter 'h' for help or 'q' to quit
+halt> 
+
+RELOAD SAME WAY-PUSH START
+*** HALT at 15716; press Return to continue; enter 'h' for help or 'q' to quit
+halt> 
+
+
+PUNCHING COMPLETE-PUSH START
+*** HALT at 15908; press Return to continue; enter 'h' for help or 'q' to quit
+halt> 
+```
+
+The program block_decode.py can then be used to show what the finished card would look like:
+
+```
+$ python3 block_decode.py output1.txt 
+................................................................................
+.....................**...**.*******.**......**.......*****.....................
+.....................**...**.**......**......**......**...**....................
+.....................**...**.**......**......**......**...**....................
+.....................**...**.**......**......**......**...**....................
+.....................*******.*****...**......**......**...**....................
+.....................*******.*****...**......**......**...**....................
+.....................**...**.**......**......**......**...**....................
+.....................**...**.**......**......**......**...**....................
+.....................**...**.**......**......**......**...**....................
+.....................**...**.*******.*******.*******..*****.....................
+................................................................................
+```
+
+#### Two lines of text
+
+```
+$ python3 py1620.py block.txt 0000 output2.txt
+4800000000004911900000003600014001004600024004003600060005001500001000083800000005004900000
+*** HALT at 0; press Return to continue; enter 'h' for help or 'q' to quit
+halt> 
+
+SET CENTERING SWITCHES BEFORE TYPING EACH LINE
+SW1 ON-NO UPPER CENTERING	SW2 ON-NO LOWER CENTERING
+TEN CHARACTER LIMIT PER LINE
+
+NO. OF 2-LINE SETS-1
+	NO. OF 1-LINE SETS-0
+
+
+2-LINE SETS-
+SET NO. 01	FIRST LINE-hello
+     SECOND LINE-friends
+
+NO. OF CARDS-1
+
+
+LOAD 003 CARDS(12-EDGE 1ST, FACE UP)
+RELOAD SAME WAY-PUSH START
+*** HALT at 15716; press Return to continue; enter 'h' for help or 'q' to quit
+halt> 
+
+RELOAD SAME WAY-PUSH START
+*** HALT at 15716; press Return to continue; enter 'h' for help or 'q' to quit
+halt> 
+
+
+FLIP CARDS(PUT 9-EDGE 1ST, FACE DOWN)-PUSH START
+*** HALT at 15716; press Return to continue; enter 'h' for help or 'q' to quit
+halt> 
+
+RELOAD SAME WAY-PUSH START
+*** HALT at 15716; press Return to continue; enter 'h' for help or 'q' to quit
+halt> 
+
+RELOAD SAME WAY-PUSH START
+*** HALT at 15716; press Return to continue; enter 'h' for help or 'q' to quit
+halt> 
+
+
+PUNCHING COMPLETE-PUSH START
+*** HALT at 15908; press Return to continue; enter 'h' for help or 'q' to quit
+halt> 
+```
+
+Decoding produces:
+
+```
+$ python3 block_decode.py output2.txt 
+................................................................................
+.....................*....*..******..*.......*........****......................
+.....................*....*..*.......*.......*.......*....*.....................
+.....................******..*****...*.......*.......*....*.....................
+.....................*....*..*.......*.......*.......*....*.....................
+.....................*....*..******..******..******...****......................
+................................................................................
+.............******..*****....***....******..*...*...*****....****..............
+.............*.......*....*....*.....*.......**..*...*....*..*..................
+.............*****...*****.....*.....*****...*.*.*...*....*...****..............
+.............*.......*..*......*.....*.......*..**...*....*.......*.............
+.............*.......*...*....***....******..*...*...*****....****..............
 ```
 
 ### Credits
