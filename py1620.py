@@ -734,10 +734,11 @@ while True:
     if OP == (1, 6):
         p = getim(PC+2)
         q = PC+11
+        start = p
         while True:
             M[p] = M[q]
             F[p] = F[q]
-            if F[q] or q == PC+7:
+            if (F[q] and p != start) or q == PC+7:
                 break
             p -= 1
             q -= 1
