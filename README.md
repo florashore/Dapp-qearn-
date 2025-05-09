@@ -22,7 +22,7 @@ To run the slot machine / one-armed bandit, playing for 50 cents (sense switch 4
 
 Without any arguments, the tic-tac-toe game is run.
 
-If the "SLOW" parameter in line 7 of py1620.py is set to True, terminal output speed will be limited to 10 characters per second like a typewriter on a real IBM 1620.
+If the ```SLOW``` parameter in line 7 of py1620.py is set to True, terminal output speed will be limited to 10 characters per second like a typewriter on a real IBM 1620. This setting makes sense especially for the baseball game and the 99 bottles of beer demo, because otherwise output will scroll by much too fast to read.
 
 See the [IBM1620-Baseball](https://github.com/mdoege/IBM1620-Baseball) repo for additional IBM 1620 tools and documentation.
 
