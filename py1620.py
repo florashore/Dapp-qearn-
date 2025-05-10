@@ -7,8 +7,9 @@ DEBUG = False       # log commands to cmd.txt?
 SLOW  = False       # realistic output speed (10 cps)?
 SINGLE_STEP = False # single-step/manual mode
 
-if len(sys.argv) > 1 and sys.argv[1] == "pow":
+if len(sys.argv) > 1 and sys.argv[1][-5:] == ".cmem":
     CMEM = True     # read from CMEM file
+    CMEM_FILE = sys.argv[1]
 else:
     CMEM = False    # read punch card file
 
@@ -18,8 +19,6 @@ CARD_FILE = "tic.txt"
 
 if len(sys.argv) > 1:
     CARD_FILE = sys.argv[1]
-
-CMEM_FILE = "APP_Power_Of_2.cmem"
 
 # default setting of sense switches
 
@@ -46,6 +45,7 @@ NB = 12     # numeric blank
 MAXSHOW = 130       # RAM dump maximum
 OVER = "\u0305"     # overbar character
 CH_UNDEF = "\u0416" # undefined character
+CH_REC = "\u2021"   # record mark double dagger character
 CARDNUM = 0         # current card number
 BRANCH_BACK = 0     # saved subroutine return address
 
@@ -73,6 +73,7 @@ IND["LASTCARD"] = False
 IND["EQ"] = False
 IND["HEQ"] = False
 IND["HIGH"] = False
+IND["OVERFLOW"] = False
 
 # read character codes
 alpha = """00  
@@ -262,6 +263,8 @@ if CMEM:
                 v = l[7:].split()
                 for n, y in enumerate(v):
                     y = y.strip()
+                    if len(y) < 2:
+                        y = "0" + y
                     F[x+n] = int(y[0])
                     M[x+n] = int(y[1], 16)
 
@@ -315,8 +318,18 @@ def getlen(x):
         x2 -= 1
     return len(s)
 
+# get length of number field (immediate)
+def getlen_im(x2):
+    s = ""
+    start = x2
+    while True:
+        s = str(M[x2]) + s
+        if F[x2] and x2 != start: break
+        x2 -= 1
+    return max(2, min(5, len(s)))
+
 # set number field
-def setnum(x, val, digits = None):
+def setnum(x, val, digits = None, over = False):
     if val < 0:
         s = "%u" % -val
     else:
@@ -330,13 +343,16 @@ def setnum(x, val, digits = None):
 
     # check if there is enough space for number
     #   and remove extra digits if necessary
-    overflow = False
+    IND["OVERFLOW"] = over
     for n in range(1, sz):
         if M[x-n] == RM:
-            overflow = True
-            #print("1 overflow***", s)
+            IND["OVERFLOW"] = True
             s = s[-n:]
-            #print("2 overflow***", s)
+            sz = max(2, len(s))
+            break
+        if n < sz - 1 and F[x-n]:
+            IND["OVERFLOW"] = True
+            s = s[-n - 1:]
             sz = max(2, len(s))
             break
 
@@ -418,6 +434,8 @@ def debugger(prompt = "debug"):
             SENSE_SW[sw - 1] = not SENSE_SW[sw - 1]
             sw_out = "".join(["1" if q else "0" for q in SENSE_SW])
             print("sense switches now: " + sw_out)
+        if inp[0] == "i":   # show indicators
+            print(IND)
         if inp[0] == "q":   # quit emulator
             sys.exit()
         if inp[0] == "m":   # manual mode (= single-step mode)
@@ -435,6 +453,7 @@ def debugger(prompt = "debug"):
             print("      e        examine memory")
             print("      s        show current sense switch settings")
             print("      t        toggle a sense switch with t1, t2, t3, t4")
+            print("      i        show indicators")
             print("      m        manual mode (= single-step mode)")
             print("      a        auto mode")
             print("      g        set PC to value")
@@ -466,6 +485,13 @@ def set_ind(x):
     else:
         IND["HEQ"] = False
 
+# set overflow indicator if len(b) > len(a)
+def set_over(a, b):
+    if len(str(abs(a))) < len(str(abs(b))):
+        return True
+    else:
+        return False
+
 # pretty-print command arguments
 def show_args(x):
     out = ""
@@ -473,6 +499,12 @@ def show_args(x):
         out += str(M[x + i])
     out = out[:5] + " " + out[5:]
     return out
+
+def same_sign(a, b):
+    if (a < 0 and b < 0) or (a >= 0 and b >= 0):
+        return True
+    else:
+        return False
 
 WATCHED = -1      # watches a memory address for changes if >= 0
 WATCH_LAST = -1   # last contents of watched address
@@ -523,7 +555,7 @@ while True:
         p = getnum(PC+2)
         q = getnum(PC+7)
         #print("***",p," ",q," ")
-        setnum(getim(PC+2), p + q, digits = 10**(getlen(PC+2) - 1))
+        setnum(getim(PC+2), p + q, digits = 10**(getlen(PC+2) - 1), over = set_over(p, q))
         set_ind(p + q)
 
     # AM
@@ -531,7 +563,7 @@ while True:
         p = getnum(PC+2)
         q = getimflag(PC+7)
         #print("***",p," ",q," ")
-        setnum(getim(PC+2), p + q, digits = 10**(getlen(PC+2) - 1))
+        setnum(getim(PC+2), p + q, digits = 10**(getlen(PC+2) - 1), over = set_over(p, q))
         set_ind(p + q)
 
     # M
@@ -553,7 +585,7 @@ while True:
             M[i] = 0
             F[i] = 0
         #print("***",p," ",q," ")
-        setnum(99, p * q, digits = 10** (getlen(PC+2)))
+        setnum(99, p * q, digits = 10** (getlen(PC+2) + getlen_im(PC+11) - 1))
         set_ind(p * q)
 
     # CM
@@ -590,6 +622,10 @@ while True:
             IND["HEQ"] = True
         else:
             IND["HEQ"] = False
+        IND["OVERFLOW"] = False
+        if same_sign(p, q):
+            if getlen(PC+2) < getlen(PC+7):
+                IND["OVERFLOW"] = True
 
     # CF
     if OP == (3, 3):
@@ -609,7 +645,7 @@ while True:
         p = getnum(PC+2)
         q = getnum(PC+7)
         #print("***",p," ",q," ")
-        setnum(getim(PC+2), p - q, digits = 10**(getlen(PC+2) - 1))
+        setnum(getim(PC+2), p - q, digits = 10**(getlen(PC+2) - 1), over = set_over(p, q))
         set_ind(p - q)
 
     # SM
@@ -617,7 +653,7 @@ while True:
         p = getnum(PC+2)
         q = getimflag(PC+7)
         #print("SM: ",p," ",q," ")
-        setnum(getim(PC+2), p - q, digits = 10**(getlen(PC+2) - 1))
+        setnum(getim(PC+2), p - q, digits = 10**(getlen(PC+2) - 1), over = set_over(p, q))
         set_ind(p - q)
 
     # SF
@@ -691,7 +727,6 @@ while True:
                 sys.stdout.flush()
                 time.sleep(.1)
             if M[n] == RM:
-                #print()
                 break
             if F[n]:
                 print(str(M[n]) + OVER, end="")
@@ -704,12 +739,23 @@ while True:
     if OP == (3, 5):
         start = getim(PC+2)
         dev = M[PC + 9]
-        if dev == 1:
+        if dev == 1:    # TTY
             for i in range(start, MSIZE):
+                if M[i] == RM:
+                    print(CH_REC, end="")
+                    continue
                 if F[i]:
                     print(str(M[i]) + OVER, end="")
                 else:
                     print(M[i], end="")
+        if dev == 4:    # punch card
+            flagchar = "]JKLMNOPQR"
+            for i in range(start, MSIZE):
+                if F[i]:
+                    OUTFILE.write(flagchar[M[i]])
+                else:
+                    OUTFILE.write(str(M[i]))
+            OUTFILE.write("\n")
 
     # TF
     if OP == (2, 6):
@@ -810,7 +856,10 @@ while True:
                 PC = pos
                 continue
         elif dev == 14:
-            pass #print("overflow check", pos)
+            if IND["OVERFLOW"]:
+                IND["OVERFLOW"] = False
+                PC = pos
+                continue
         elif dev == 16:
             pass #print("mem check", pos)
         elif dev == 17:
@@ -859,7 +908,11 @@ while True:
                 PC = pos
                 continue
         elif dev == 14:
-            pass #print("overflow check", pos)
+            if not IND["OVERFLOW"]:
+                PC = pos
+                continue
+            else:
+                IND["OVERFLOW"] = False
         elif dev == 16:
             pass #print("mem check", pos)
         elif dev == 17:
