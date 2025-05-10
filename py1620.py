@@ -13,9 +13,8 @@ if len(sys.argv) > 1 and sys.argv[1][-5:] == ".cmem":
 else:
     CMEM = False    # read punch card file
 
-# punch card and CMEM input files
+# default punch card input file
 CARD_FILE = "tic.txt"
-#CARD_FILE = "base.txt"
 
 if len(sys.argv) > 1:
     CARD_FILE = sys.argv[1]

@@ -6,6 +6,8 @@ This [IBM 1620](https://en.wikipedia.org/wiki/IBM_1620) emulator in Python can n
 
 The emulated machine is an IBM 1620 Model 1 in its base configuration with 20,000 decimal digits of memory and without any special features (such as divide instructions, indirect or indexed addressing, or floating point instructions). The addition and multiplication tables in 1620 memory are not used but standard Python integer math.
 
+Py1620 uses a Unicode combining character to display overbars for digits with an active flag bit. These overbars may not look all that great with some terminal fonts, e.g. they may be shifted horizontally in respect to the digit below. Switching to a different terminal font with better overbar support (like [GNU Unifont](https://unifoundry.com/unifont/)) will solve this issue.
+
 ### Usage
 
 ```python3 py1620.py input.txt [0000] [output.txt]```
@@ -31,8 +33,6 @@ See the [IBM1620-Baseball](https://github.com/mdoege/IBM1620-Baseball) repo for 
 ![Py1620](py1620.png "Power of Two output in IBM 1403 font")
 
 The program is loaded from the CMEM file. Computing 2**9999 takes about 35 seconds on a PC, so this particular program is about 35x as fast in Py1620 as on a real IBM 1620.
-
-Overbars for the flag bit are printed using Unicode combining characters and may not look good (e.g. be shifted horizontally) with some fonts.
 
 Also see this [YouTube video](https://www.youtube.com/watch?v=e4JH26yF_u0) of Power of Two running on the [1620 Junior](https://github.com/IBM-1620) emulator.
 
