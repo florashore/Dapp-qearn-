@@ -376,7 +376,7 @@ python3 block_decode_image.py output2.txt block_card2.png
 
 ### CU01 general op codes diagnostic
 
-Tests 51 to 55 have been disabled in the test because Py1620 does not use addition tables.
+The emulator now completes this important test successfully. Tests 51 to 55 have been disabled in the test because Py1620 does not use addition tables.
 
 Testing takes about 5 seconds on a PC, as opposed to 150 seconds on a real IBM 1620, so it is about 30x as fast.
 
