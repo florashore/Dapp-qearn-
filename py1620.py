@@ -765,8 +765,15 @@ while True:
     # BT
     if OP == (2, 7):
         pos = getim(PC+2)
-        q = getnum(PC+7)
-        setnum(pos - 1, q, digits = 10**(getlen(PC+7) - 1))
+        q = getim(PC+7)
+        i = pos - 1
+        while True:
+            M[i] = M[q]
+            F[i] = F[q]
+            if F[i] and i != pos - 1:
+                break
+            i -= 1
+            q -= 1
         BRANCH_BACK = PC + 12
         PC = pos
         continue
