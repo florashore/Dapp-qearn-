@@ -10,7 +10,7 @@ The emulated machine is an IBM 1620 Model 1 in its base configuration with 20,00
 
 ```python3 py1620.py input.txt [0000] [output.txt]```
 
-where input.txt is either a card reader input file in SIMH format or a CMEM core file, 0000 are the (optional) sense switch settings, and output.txt is the card punch output file (optional).
+where input.txt is either a card reader input file in SIMH format or a CMEM core memory file, 0000 are the (optional) sense switch settings, and output.txt is the card punch output file (optional).
 
 E.g., to run the baseball game with sense switch 3 set to on (= play only a single game):
 
@@ -30,7 +30,7 @@ See the [IBM1620-Baseball](https://github.com/mdoege/IBM1620-Baseball) repo for 
 
 ![Py1620](py1620.png "Power of Two output in IBM 1403 font")
 
-The program is loaded from the CMEM file. Computing 2**9999 takes about 45 seconds on a PC, so this particular program is about 27x as fast as on a real IBM 1620.
+The program is loaded from the CMEM file. Computing 2**9999 takes about 35 seconds on a PC, so this particular program is about 35x as fast in Py1620 as on a real IBM 1620.
 
 Overbars for the flag bit are printed using Unicode combining characters and may not look good (e.g. be shifted horizontally) with some fonts.
 
@@ -406,7 +406,7 @@ halt>
 
 ### CU01 general op codes diagnostic
 
-The emulator now completes this important test successfully. Tests 51 to 55 have been disabled because Py1620 does not use addition tables.
+Py1620 now completes this important IBM 1620 self test successfully. Tests 51 to 55 have been disabled because Py1620 does not use addition tables.
 
 Testing takes about 5 seconds on a PC, as opposed to 150 seconds on a real IBM 1620, so it is about 30x as fast.
 
