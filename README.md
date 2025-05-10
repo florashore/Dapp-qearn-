@@ -374,6 +374,36 @@ python3 block_decode_image.py output2.txt block_card2.png
 
 ![punch card 2](block_card2.png "punch card 2")
 
+### Day of the week
+
+This Fortran program calculates the day of the week for a given date. The date has to be entered in three six-digit fields. (Obviously this program was more intended to read dates from punch cards.)
+
+The IBM 1620 product specifications are dated January 6, 1960. Entering this in fixed format into the program (5 spaces, "1", 5 spaces, "6", 2 spaces, "1960") produces the correct answer that this was a Wednesday:
+
+```
+$ python3 py1620.py cal.txt 
+
+BEGIN EXECUTION.
+
+
+
+ GREGORIAN CALENDAR-1585 AD TO 2599 AD
+
+
+ SENSE SWITCH NUMBER 1 ON FOR CARD DATA
+ INPUT, OFF FOR TYPEWRITER INPUT
+
+
+PAUSE 0001
+*** HALT at 3576; press Return to continue; enter 'h' for help or 'q' to quit
+halt> 
+
+     1     6  1960
+
+ JANUARY    6 , 1960
+ IS A WEDNESDAY
+```
+
 ### CU01 general op codes diagnostic
 
 The emulator now completes this important test successfully. Tests 51 to 55 have been disabled because Py1620 does not use addition tables.
