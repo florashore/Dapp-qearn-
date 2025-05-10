@@ -192,8 +192,8 @@ def cardline(pos):
         n = i + pos
         asc = ord(x)
         if x not in "0123456789 JKLMNOPQR ]-/|!@":
-            print("*** card character not in whitelist", x)
-            debugger("halt")
+            print("*** error: card character not in whitelist:", x)
+            sys.exit()
         if 47 < asc < 58:
             val = int(x)
             M[n] = val
@@ -381,7 +381,7 @@ def dumpmem():
 
 # debugger prompt
 def debugger(prompt = "debug"):
-    global SINGLE_STEP
+    global SINGLE_STEP, PC
 
     while True:
         inp = input(prompt + "> ").strip()
@@ -424,6 +424,9 @@ def debugger(prompt = "debug"):
             SINGLE_STEP = True
         if inp[0] == "a":   # auto mode
             SINGLE_STEP = False
+        if inp[0] == "g":   # set PC
+            PC = int(inp.split()[1])
+            print("PC = ", PC)
         if inp[0] == "c":   # continue
             break
         if inp[0] == "h":   # print help
@@ -434,6 +437,7 @@ def debugger(prompt = "debug"):
             print("      t        toggle a sense switch with t1, t2, t3, t4")
             print("      m        manual mode (= single-step mode)")
             print("      a        auto mode")
+            print("      g        set PC to value")
             print("      c        continue (or just press Return)")
             print("      q        quit emulator")
             print("    PC = %u; print current instruction with: e %u/12" % (PC, PC))
@@ -709,10 +713,11 @@ while True:
     if OP == (2, 6):
         p = getim(PC+2)
         q = getim(PC+7)
+        start = p
         while True:
             M[p] = M[q]
             F[p] = F[q]
-            if F[q]:
+            if (F[q] and p != start):
                 break
             p -= 1
             q -= 1
