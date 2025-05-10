@@ -667,6 +667,7 @@ while True:
                     if almer[k][0] == c1 and almer[k][1] == c2:
                         out = k
                 print(out, end="")
+                sys.stdout.flush()
                 n += 2
         if dev == 4:    # card punch
             while True:
@@ -696,6 +697,7 @@ while True:
                 print(str(M[n]) + OVER, end="")
             else:
                 print(M[n], end="")
+            sys.stdout.flush()
             n += 1
 
     # DN
