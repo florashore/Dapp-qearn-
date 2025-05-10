@@ -278,7 +278,7 @@ def getim(x):
     else:
         return val
 
-# get immediate value (stopping at flag)
+# get immediate value (stopping at flag) as a tuple of (string, sign)
 def getimflag(x):
     s = ""
     for i in range(4, -1, -1):
@@ -286,13 +286,12 @@ def getimflag(x):
         if F[x + i] and i < 4:
             break
     s = "".join(s)
-    val = int(s)
     if F[x+4]:
-        return -val
+        return (s, -1)
     else:
-        return val
+        return (s, 1)
 
-# get number field
+# get number field as a tuple of (string, sign)
 def getnum(x):
     s = ""
     x2 = getim(x)
@@ -301,32 +300,10 @@ def getnum(x):
         s = str(M[x2]) + s
         if F[x2] and x2 != start: break
         x2 -= 1
-    val = int(s)
     if F[getim(x)]:
-        return -val
+        return (s, -1)
     else:
-        return val
-
-# get length of number field
-def getlen(x):
-    s = ""
-    x2 = getim(x)
-    start = x2
-    while True:
-        s = str(M[x2]) + s
-        if F[x2] and x2 != start: break
-        x2 -= 1
-    return len(s)
-
-# get length of number field (immediate)
-def getlen_im(x2):
-    s = ""
-    start = x2
-    while True:
-        s = str(M[x2]) + s
-        if F[x2] and x2 != start: break
-        x2 -= 1
-    return max(2, min(5, len(s)))
+        return (s, 1)
 
 # set number field
 def setnum(x, val, digits = None, over = False):
@@ -335,7 +312,7 @@ def setnum(x, val, digits = None, over = False):
     else:
         s = "%u" % val
     if digits != None:
-        digdiff = len("%u" % digits) - len(s)
+        digdiff = digits - len(s)
         if digdiff > 0:
             s = "0" * digdiff + s
 
@@ -487,7 +464,7 @@ def set_ind(x):
 
 # set overflow indicator if len(b) > len(a)
 def set_over(a, b):
-    if len(str(abs(a))) < len(str(abs(b))):
+    if len(a) < len(b):
         return True
     else:
         return False
@@ -554,50 +531,55 @@ while True:
     if OP == (2, 1):
         p = getnum(PC+2)
         q = getnum(PC+7)
+        pi, qi = p[1] * int(p[0]), q[1] * int(q[0])
         #print("***",p," ",q," ")
-        setnum(getim(PC+2), p + q, digits = 10**(getlen(PC+2) - 1), over = set_over(p, q))
-        set_ind(p + q)
+        setnum(getim(PC+2), pi + qi, digits = len(p[0]), over = set_over(p[0], q[0]))
+        set_ind(pi + qi)
 
     # AM
     if OP == (1, 1):
         p = getnum(PC+2)
         q = getimflag(PC+7)
+        pi, qi = p[1] * int(p[0]), q[1] * int(q[0])
         #print("***",p," ",q," ")
-        setnum(getim(PC+2), p + q, digits = 10**(getlen(PC+2) - 1), over = set_over(p, q))
-        set_ind(p + q)
+        setnum(getim(PC+2), pi + qi, digits = len(p[0]), over = set_over(p[0], q[0]))
+        set_ind(pi + qi)
 
     # M
     if OP == (2, 3):
         p = getnum(PC+2)
         q = getnum(PC+7)
+        pi, qi = p[1] * int(p[0]), q[1] * int(q[0])
         for i in range(80, 100):
             M[i] = 0
             F[i] = 0
         #print("***",p," ",q," ")
-        setnum(99, p * q, digits = 10** (getlen(PC+2) + getlen(PC+7) - 1))
-        set_ind(p * q)
+        setnum(99, pi * qi, digits = len(p[0]) + len(q[0]))
+        set_ind(pi * qi)
 
     # MM
     if OP == (1, 3):
         p = getnum(PC+2)
         q = getimflag(PC+7)
+        pi, qi = p[1] * int(p[0]), q[1] * int(q[0])
         for i in range(80, 100):
             M[i] = 0
             F[i] = 0
         #print("***",p," ",q," ")
-        setnum(99, p * q, digits = 10** (getlen(PC+2) + getlen_im(PC+11) - 1))
-        set_ind(p * q)
+        setnum(99, pi * qi, digits = len(p[0]) + len(q[0]))
+        set_ind(pi * qi)
 
     # CM
     if OP == (1, 4):
         p = getnum(PC+2)
         q = getimflag(PC+7)
+        pi, qi = p[1] * int(p[0]), q[1] * int(q[0])
         #print("CM:",p,q)
-        if p > q:
+        if pi > qi:
             IND["HIGH"] = True
         else:
             IND["HIGH"] = False
-        if p == q:
+        if pi == qi:
             IND["EQ"] = True
         else:
             IND["EQ"] = False
@@ -610,11 +592,12 @@ while True:
     if OP == (2, 4):
         p = getnum(PC+2)
         q = getnum(PC+7)
-        if p > q:
+        pi, qi = p[1] * int(p[0]), q[1] * int(q[0])
+        if pi > qi:
             IND["HIGH"] = True
         else:
             IND["HIGH"] = False
-        if p == q:
+        if pi == qi:
             IND["EQ"] = True
         else:
             IND["EQ"] = False
@@ -623,8 +606,8 @@ while True:
         else:
             IND["HEQ"] = False
         IND["OVERFLOW"] = False
-        if same_sign(p, q):
-            if getlen(PC+2) < getlen(PC+7):
+        if same_sign(pi, qi):
+            if len(p[0]) < len(q[0]):
                 IND["OVERFLOW"] = True
 
     # CF
@@ -644,17 +627,19 @@ while True:
     if OP == (2, 2):
         p = getnum(PC+2)
         q = getnum(PC+7)
+        pi, qi = p[1] * int(p[0]), q[1] * int(q[0])
         #print("***",p," ",q," ")
-        setnum(getim(PC+2), p - q, digits = 10**(getlen(PC+2) - 1), over = set_over(p, q))
-        set_ind(p - q)
+        setnum(getim(PC+2), pi - qi, digits = len(p[0]), over = set_over(p[0], q[0]))
+        set_ind(pi - qi)
 
     # SM
     if OP == (1, 2):
         p = getnum(PC+2)
         q = getimflag(PC+7)
-        #print("SM: ",p," ",q," ")
-        setnum(getim(PC+2), p - q, digits = 10**(getlen(PC+2) - 1), over = set_over(p, q))
-        set_ind(p - q)
+        pi, qi = p[1] * int(p[0]), q[1] * int(q[0])
+        #print("***",p," ",q," ")
+        setnum(getim(PC+2), pi - qi, digits = len(p[0]), over = set_over(p[0], q[0]))
+        set_ind(pi - qi)
 
     # SF
     if OP == (3, 2):
