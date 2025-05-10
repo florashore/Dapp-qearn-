@@ -849,6 +849,8 @@ while True:
             pass #print("mem check", pos)
         elif dev == 17:
             pass #print("mem check 2", pos)
+        elif dev == 19:
+            pass  # GOTRAN needs this check
         elif dev <= 4:
             if dev == 1 and SENSE_SW[0]:
                 PC = pos
@@ -875,6 +877,9 @@ while True:
             pass #print("read check", pos)
         elif dev == 7:
             pass #print("write check", pos)
+        elif dev == 8: # GOTRAN needs this check
+            PC = pos
+            continue
         elif dev == 9:
             #print("card check", PC, pos)
             if not IND["LASTCARD"]:

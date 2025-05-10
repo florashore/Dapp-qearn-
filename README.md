@@ -404,6 +404,49 @@ halt>
  IS A WEDNESDAY
 ```
 
+### GOTRAN
+
+GOTRAN is an interactive Fortran-like programming language for the IBM 1620. A program is entered from the typewriter (or read from cards) and after a final ```END``` statement, the machine halts. Starting the machine runs the program. Then it halts again and the next program can be entered.
+
+```
+$ python3 py1620.py gotran.txt 
+
+*** HALT at 18156; press Return to continue; enter 'h' for help or 'q' to quit
+halt>  
+x=.3
+
+do 1 i=1,10
+
+a=sin(x)
+
+print,i,x,a
+
+1 x=x+.6
+
+end
+
+
+
+*** HALT at 8514; press Return to continue; enter 'h' for help or 'q' to quit
+halt> 
+
+ 001	 .30000000	 .29552020	
+ 002	 .90000000	 .78332690	
+ 003	 1.5000000	 .99749498	
+ 004	 2.1000000	 .86320936	
+ 005	 2.7000000	 .42737988	
+ 006	 3.3000000	-.15774568	
+ 007	 3.9000000	-.68776615	
+ 008	 4.5000000	-.97753012	
+ 009	 5.1000000	-.92581468	
+ 010	 5.7000000	-.55068554	
+END OF PROGRAM
+
+
+*** HALT at 1842; press Return to continue; enter 'h' for help or 'q' to quit
+halt> 
+```
+
 ### CU01 general op codes diagnostic
 
 Py1620 now completes this important IBM 1620 self test successfully. Tests 51 to 55 have been disabled because Py1620 does not use addition tables.
