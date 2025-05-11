@@ -6,9 +6,7 @@ This [IBM 1620](https://en.wikipedia.org/wiki/IBM_1620) emulator in Python can n
 
 The emulated machine is an IBM 1620 Model 1 in its base configuration with 20,000 decimal digits of memory and without any special features (such as divide instructions, indirect addressing, or floating point instructions). The addition and multiplication tables in 1620 memory are not used but standard Python integer math.
 
-Py1620 uses a Unicode combining character to display overbars for digits with an active flag bit. These overbars may not look all that great with some terminal fonts, e.g. they may be shifted horizontally in respect to the digit below. Switching to a different terminal font with better overbar support (like [GNU Unifont](https://unifoundry.com/unifont/)) will solve this issue.
-
-### Usage
+### Emulator usage
 
 ```python3 py1620.py input.txt [0000] [output.txt]```
 
@@ -26,9 +24,23 @@ Without any arguments, the tic-tac-toe game is run.
 
 If the ```SLOW``` parameter in line 7 of py1620.py is set to True, terminal output speed will be limited to 10 characters per second like a typewriter on a real IBM 1620. This setting makes sense especially for the baseball game and the 99 bottles of beer demo, because otherwise output will scroll by much too fast to read.
 
+Py1620 uses a Unicode combining character to display overbars for digits with an active flag bit. These overbars may not look all that great with some terminal fonts, e.g. they may be shifted horizontally in respect to the digit below. Switching to a different terminal font with better overbar support (like [GNU Unifont](https://unifoundry.com/unifont/)) will solve this issue.
+
 See the [IBM1620-Baseball](https://github.com/mdoege/IBM1620-Baseball) repo for additional IBM 1620 tools and documentation.
 
-### Power of 2
+### Why emulate the IBM 1620?
+
+The IBM 1620 feels similar in some ways to an early DEC PDP such as the PDP-8, but also opposite in other aspects, which makes it an interesting target for emulation. Both the 1620 and the PDP-8 could be considered early personal computers, apart from their high price tags and more limited production runs.
+
+Similarities between the IBM 1620 and a PDP-8 include: They are friendly minicomputers, not too expensive (by the standards of the day), ideal for interactive use and games. Their basic operation is quite simple, with just the computer, a terminal (teletype/typewriter), and input/output via paper media required. Magnetic storage media were supported but optional for most software (making it easier to write an emulator for these machines). An operating system is not needed; most programs run on bare metal.
+
+But in many ways the 1620 and a PDP are also very different: punch cards (1620) vs paper tape (PDP), variable-length decimal (1620) vs binary words (PDP), a machine language that is high-level (1620) vs one that is extremely low-level (PDP-8), and booting the machine automatically from punch cards (1620) vs toggling in a paper tape loader via the front panel (PDP).
+
+The main reasons why the IBM 1620 is relatively obscure today compared to the more ubiquitous DEC PDP are probably that fewer 1620s were built, that they were more expensive, and that IBM customers typically rented their machines rather than purchased them, therefore fewer 1620s still exist today.
+
+A major advantage of the IBM 1620 for emulation is that a lot of software for the system has survived on punch cards, mainly from Bitsavers and the CHM collection, and that it includes quite a few games and interactive demos. This is helpful when writing an emulator, because programs of different complexity which exercise the machine in different ways are ideal for testing.
+
+### Power of 2 demo program from the Computer History Museum
 
 ![Py1620](py1620.png "Power of Two output in IBM 1403 font")
 
@@ -52,11 +64,11 @@ N = 100
 2**100 = 1267650600228229401496703205376
 ```
 
-### Tic-Tac-Toe (default program)
+### Tic-tac-toe (default program)
 
 The program is loaded from the punch card text file. When the computer loses, it will learn the losing move and play differently next time:
 
-![TTT](Tic-Tac-Toe_software_catalog.png "Tic-Tac-Toe in the 1971 software catalog")
+![TTT](Tic-Tac-Toe_software_catalog.png "Tic-tac-toe in the 1971 software catalog")
 
 ```
 $ python3 py1620.py
@@ -91,7 +103,7 @@ NEW GAME
 YOUR PLAY 
 ```
 
-### One-armed bandit
+### One-armed bandit (aka slot machine)
 
 Setting all sense switches to off (with "t4" in the debugger in the run below) prints your account balance and resets the account to zero:
 ```
@@ -374,7 +386,7 @@ python3 block_decode_image.py output2.txt block_card2.png
 
 ![punch card 2](block_card2.png "punch card 2")
 
-### Day of the week
+### Day of the week (programmed in Fortran)
 
 This Fortran program calculates the day of the week for a given date. The date has to be entered in three six-digit fields. (Obviously this program was more intended to read dates from punch cards.)
 
