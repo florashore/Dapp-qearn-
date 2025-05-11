@@ -291,15 +291,16 @@ def getimflag(x):
         return (s, 1)
 
 # get number field as a tuple of (string, sign)
-def getnum(x):
+def getnum(x, x2 = None):
     s = ""
-    x2 = getim(x)
+    if x2 == None:     # no direct address supplied, so get it from x
+        x2 = getim(x)
     start = x2
     while True:
         s = str(M[x2]) + s
         if F[x2] and x2 != start: break
         x2 -= 1
-    if F[getim(x)]:
+    if F[start]:
         return (s, -1)
     else:
         return (s, 1)
@@ -443,7 +444,8 @@ def debugger(prompt = "debug"):
 known = (
 (2,1),(1,1),(3,3),(4,8),(2,2),(1,2),(3,2),(3,7),(3,6),(3,9),(3,8),
 (4,1),(2,6),(1,6),(4,6),(4,9),(4,5),(2,5),(1,5),(4,4),(3,1),(3,4),
-(1,4),(4,3),(4,7),(2,4),(1,7),(4,2),(2,3),(1,3),(2,7),(3,5)
+(1,4),(4,3),(4,7),(2,4),(1,7),(4,2),(2,3),(1,3),(2,7),(3,5),
+(2,8),(2,9),(1,8),(1,9)
 )
 
 # set indicators
@@ -567,6 +569,96 @@ while True:
         #print("***",p," ",q," ")
         setnum(99, pi * qi, digits = len(p[0]) + len(q[0]))
         set_ind(pi * qi)
+
+    # LD
+    if OP == (2, 8):
+        p = getim(PC+2)
+        q = getim(PC+7)
+        start = q
+        for i in range(80, 100):
+            M[i] = 0
+            F[i] = 0
+        F[99] = F[q]
+        while True:
+            M[p] = M[q]
+            if (F[q] and q != start):
+                F[p] = F[q]
+                break
+            p -= 1
+            q -= 1
+
+    # LDM
+    if OP == (1, 8):
+        p = getim(PC+2)
+        q = PC + 11
+        start = q
+        for i in range(80, 100):
+            M[i] = 0
+            F[i] = 0
+        F[99] = F[q]
+        while True:
+            M[p] = M[q]
+            if (F[q] and q != start):
+                F[p] = F[q]
+                break
+            p -= 1
+            q -= 1
+
+    # D
+    if OP == (2, 9):
+        p = getnum(0, x2 = 99)
+        q = getnum(PC+7)
+        pi, qi = p[1] * int(p[0]), q[1] * int(q[0])
+        if qi != 0 and int(getnum(PC+2)[0]) / int(q[0]) > 9:
+            first_digit = True
+        else:
+            first_digit = False
+        for i in range(80, 100):
+            M[i] = 0
+            F[i] = 0
+
+        if qi == 0:
+            IND["OVERFLOW"] = True
+        else:
+            d, m = divmod(int(p[0]), int(q[0]))
+            m = m * p[1]
+            dig_rem = max(2, len(q[0]))
+            #print("***",p,q,pi,qi,d,m,dig_rem)
+            setnum(99, m, digits = dig_rem)
+            if not same_sign(pi, qi):
+                d = -d
+            setnum(99 - dig_rem, d, digits = len(p[0]), over = set_over(p[0], q[0]))
+            set_ind(pi / qi)
+            if first_digit:
+                IND["OVERFLOW"] = True
+
+    # DM
+    if OP == (1, 9):
+        p = getnum(0, x2 = 99)
+        q = getimflag(PC+7)
+        pi, qi = p[1] * int(p[0]), q[1] * int(q[0])
+        if qi != 0 and int(getnum(PC+2)[0]) / int(q[0]) > 9:
+            first_digit = True
+        else:
+            first_digit = False
+        for i in range(80, 100):
+            M[i] = 0
+            F[i] = 0
+
+        if qi == 0:
+            IND["OVERFLOW"] = True
+        else:
+            d, m = divmod(int(p[0]), int(q[0]))
+            m = m * p[1]
+            dig_rem = max(2, len(q[0]))
+            #print("***",p,q,pi,qi,d,m,dig_rem)
+            setnum(99, m, digits = dig_rem)
+            if not same_sign(pi, qi):
+                d = -d
+            setnum(99 - dig_rem, d, digits = len(p[0]), over = set_over(p[0], q[0]))
+            set_ind(pi / qi)
+            if first_digit:
+                IND["OVERFLOW"] = True
 
     # CM
     if OP == (1, 4):

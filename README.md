@@ -4,7 +4,7 @@
 
 This [IBM 1620](https://en.wikipedia.org/wiki/IBM_1620) emulator in Python can now run the famous IBM 1620 baseball game ("base.txt" = newer version; "bbc1.txt" = older version). Also included are the [Computer History Museum](https://computerhistory.org/)'s [Power of Two](https://github.com/IBM-1620/Junior/blob/master/diagnostics/binaries/APP_Power_Of_2.cmem) demo program, 2-D tic-tac-toe (11.0.013; "tic.txt") from the 1620 General Program Library, and "99 Bottles of Beer" by Chuck Guzis (2005; "beer.txt").
 
-The emulated machine is an IBM 1620 Model 1 in its base configuration with 20,000 decimal digits of memory and without any special features (such as divide instructions, indirect addressing, or floating point instructions). The addition and multiplication tables in 1620 memory are not used but standard Python integer math.
+The emulated machine is an IBM 1620 Model 1 with 20,000 decimal digits of memory plus the optional divide instructions. Other special features (indirect addressing or floating point instructions) are not supported. The addition and multiplication tables in 1620 memory are not used but standard Python integer math.
 
 ### Emulator usage
 
@@ -466,7 +466,7 @@ Py1620 now completes this important IBM 1620 self test successfully. Tests 51 to
 Testing takes about 5 seconds on a PC, as opposed to 150 seconds on a real IBM 1620, so it is about 30x as fast.
 
 ```
-$ python3 py1620.py CU01-nodiv.cmem 0000 out.txt
+$ python3 py1620.py CU01.cmem 0000 out.txt
 SW 1 OFF SW 2 OFF SW 3 OFF SW 4 OFF SET SWS FOR  CU01    THEN START
 *** HALT at 1080; press Return to continue; enter 'h' for help or 'q' to quit
 halt> 

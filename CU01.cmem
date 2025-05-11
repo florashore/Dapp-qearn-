@@ -888,7 +888,4 @@
 // Skip add memory lookup routines 051-055 --
 09012:  4  9  0  9  9  3  6
 
-// disable check for divide instructions
-14004:  4  1
-
 
