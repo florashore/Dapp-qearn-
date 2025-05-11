@@ -103,6 +103,70 @@ NEW GAME
 YOUR PLAY 
 ```
 
+### 3-D tic-tac-toe (Fortran)
+
+[3-D Tic-tac-toe](https://en.wikipedia.org/wiki/3D_tic-tac-toe) game by Bob Louden (1962) on a 4x4x4 grid. Requires the IBM 1620 LD and D divide instructions. The (physical) game was also released by Parker Brothers under the name Qubic in 1964.
+
+```
+$ python3 py1620.py tic3d.txt 
+
+LOAD DATA
+*** HALT at 4; press Return to continue; enter 'h' for help or 'q' to quit
+halt> 
+
+ 
+GOOD MORNING, SIR, MADAM OR MISS 
+(I CAN HARDLY TELL FROM IN HERE) 
+WE ARE GOING TO PLAY TIC-TAC-TOE 
+IF YOU KNOW HOW WE CAN BEGIN.
+IF YOU WANT ME TO EXPLAIN FIRST, 
+RAISE PROGRAM SWITCH 1.
+NOW PUSH START.
+ 
+*** HALT at 9508; press Return to continue; enter 'h' for help or 'q' to quit
+halt> 
+
+ 
+RAISE SWITCH 2 TO MOVE FIRST.
+OTHERWISE I WILL. TYPE YOUR NAME 
+RELEASE AND START.
+ 
+martin
+
+ 111 IS MY MOVE 
+TYPE YOUR MOVE, RELEASE, START.
+212
+
+ 444 IS MY MOVE 
+TYPE YOUR MOVE, RELEASE, START.
+213
+
+ 114 IS MY MOVE 
+TYPE YOUR MOVE, RELEASE, START.
+214
+
+GOOD TRY THERE,
+MARTIN               
+ 211 IS MY MOVE 
+TYPE YOUR MOVE, RELEASE, START.
+311
+
+ 112 IS MY MOVE 
+TYPE YOUR MOVE, RELEASE, START.
+321
+
+MARTIN               
+I WIN ON THE FOLLOWING SEQUENCE
+ 112 
+ 113 
+ 114 
+ 111 
+ 
+RAISE SWITCH 2 TO MOVE FIRST.
+PLEASE TYPE YOUR NAME.
+THEN RELEASE AND START.
+```
+
 ### One-armed bandit (aka slot machine)
 
 Setting all sense switches to off (with "t4" in the debugger in the run below) prints your account balance and resets the account to zero:
