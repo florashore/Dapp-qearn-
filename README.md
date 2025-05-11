@@ -473,9 +473,9 @@ python3 block_decode_image.py output2.txt block_card2.png
 
 ### Day of the week (programmed in Fortran)
 
-This Fortran program calculates the day of the week for a given date. The date has to be entered in three six-digit fields. (Obviously this program was more intended to read dates from punch cards.)
+This Fortran program calculates the day of the week for a given date.
 
-The IBM 1620 product specifications are dated January 6, 1960. Entering this in fixed format into the program (5 spaces, "1", 5 spaces, "6", 2 spaces, "1960") produces the correct answer that this was a Wednesday:
+The IBM 1620 product specifications are dated January 6, 1960. Entering this date into the program produces the correct answer that this was a Wednesday:
 
 ```
 $ python3 py1620.py cal.txt 
@@ -495,7 +495,7 @@ PAUSE 0001
 *** HALT at 3576; press Return to continue; enter 'h' for help or 'q' to quit
 halt> 
 
-     1     6  1960
+1 6 1960
 
  JANUARY    6 , 1960
  IS A WEDNESDAY
