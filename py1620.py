@@ -51,7 +51,7 @@ BRANCH_BACK = 0     # saved subroutine return address
 # define a circular array (because memory on the IBM 1620 is circular)
 class MyArray:
     def __init__(s, x):
-        s.arr = array('H', [0] * x)
+        s.arr = array('B', [0] * x)
         s.size = x
 
     def __getitem__(s, x):
