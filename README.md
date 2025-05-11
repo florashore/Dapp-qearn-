@@ -28,6 +28,25 @@ Py1620 uses a Unicode combining character to display overbars for digits with an
 
 See the [IBM1620-Baseball](https://github.com/mdoege/IBM1620-Baseball) repo for additional IBM 1620 tools and documentation.
 
+### Included IBM 1620 software
+
+#### Card decks
+
+* band.txt: one-armed bandit / slot machine
+* base.txt: baseball simulator (new)
+* bbc1.txt: baseball simulator (old)
+* beer.txt: 99 Bottles of Beer demo (2005)
+* block.txt: punch block letter messages into punch cards
+* cal.txt: day of the week calculator
+* gotran.txt: the GOTRAN interactive programming language
+* tic3d.txt: 3-D tic-tac-toe on a 4x4x4 grid
+* tic.txt: normal 3x3 tic-tac-toe
+
+#### Core memory files
+
+* APP_Power_Of_2.cmem: power of 2 demo program from the Computer History Museum, originally programmed in 2005 when they restored an IBM 1620 and exhibited it in the museum
+* CU01.cmem: IBM diagnostic to test if CPU instructions work properly. Originally intended for finding hardware faults on a real IBM 1620, but also useful now for testing the accuracy of emulators such as this one.
+
 ### Why emulate the IBM 1620?
 
 The IBM 1620 feels similar in some ways to an early DEC PDP such as the PDP-8, but also opposite in other aspects, which makes it an interesting target for emulation. Both the 1620 and the PDP-8 could be considered early personal computers, apart from their high price tags and more limited production runs.
