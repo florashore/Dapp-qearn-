@@ -105,7 +105,7 @@ YOUR PLAY
 
 ### 3-D tic-tac-toe (Fortran)
 
-[3-D Tic-tac-toe](https://en.wikipedia.org/wiki/3D_tic-tac-toe) game by Bob Louden (1962) on a 4x4x4 grid. Requires the IBM 1620 LD and D divide instructions. The (physical) game was also released by Parker Brothers under the name Qubic in 1964.
+[3-D tic-tac-toe](https://en.wikipedia.org/wiki/3D_tic-tac-toe) game by Bob Louden (1962) on a 4x4x4 grid. Requires the IBM 1620 LD and D divide instructions. The (physical) game was also released by Parker Brothers under the name Qubic in 1964.
 
 ```
 $ python3 py1620.py tic3d.txt 
