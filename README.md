@@ -59,6 +59,8 @@ The main reasons why the IBM 1620 is relatively obscure today compared to the mo
 
 A major advantage of the IBM 1620 for emulation is that a lot of software for the system has survived on punch cards, mainly from Bitsavers and the CHM collection, and that it includes quite a few games and interactive demos. This is helpful when writing an emulator, because programs of different complexity which exercise the machine in different ways are ideal for testing.
 
+![IBM 1620](IBM_1620_at_CHM.jpg "IBM 1620 at the Computer History Museum in 2006")
+
 ### Power of 2 demo program from the Computer History Museum
 
 ![Py1620](py1620.png "Power of Two output in IBM 1403 font")
@@ -570,7 +572,9 @@ halt>
 
 The IBM 1403 printer font is available at [ibm-1401.info](http://ibm-1401.info/Sched2008December.html#1403-Font).
 
-[IBM 1620 image](https://commons.wikimedia.org/wiki/File:IBM_1620_console_typewriter.mw.jpg) by Marcin Wichary, CC BY 2.0 <https://creativecommons.org/licenses/by/2.0>, via Wikimedia Commons
+[IBM 1620 typewriter image](https://commons.wikimedia.org/wiki/File:IBM_1620_console_typewriter.mw.jpg) by Marcin Wichary, CC BY 2.0 <https://creativecommons.org/licenses/by/2.0>, via Wikimedia Commons
+
+[IBM 1620 image](https://commons.wikimedia.org/wiki/File:Computer_History_Museum_P1020815_(313527189).jpg) by Takuya Oikawa, CC BY-SA 2.0 <https://creativecommons.org/licenses/by-sa/2.0>, via Wikimedia Commons
 
 IBM punch card  image from [Douglas W. Jones's punched card collection](https://homepage.divms.uiowa.edu/~jones/cards/collection/i-onefield.shtml).
 
