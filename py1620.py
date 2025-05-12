@@ -361,7 +361,9 @@ def show():
 # dump memory as PNG image, green = non-zero, blue = flag bit
 def dumpmem():
     from PIL import Image
-    x, y = 80, 250
+
+    x = 80
+    y = MSIZE // x
     im = Image.new("RGB", (x, y))
     g = open("mem.txt", "w")
     for j in range(y):
