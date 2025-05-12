@@ -239,9 +239,9 @@ def cardline_alpha(pos):
         #print(i,x,n)
         if x == "|":
             M[n+1] = RM
-            break
-        M[n]   = almer[x.upper()][0]
-        M[n+1] = almer[x.upper()][1]
+        else:
+            M[n]   = almer[x.upper()][0]
+            M[n+1] = almer[x.upper()][1]
 
 # Method 1 to get code into the emulator:
 # open a punch card file (in SIMH txt format)
