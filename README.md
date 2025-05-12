@@ -623,6 +623,39 @@ END OF PROGRAM
 halt> 
 ```
 
+---
+
+If sense switch 1 is set, GOTRAN will read and run programs from the punch card reader instead of the typewriter. A new card reader input file has to be attached from the debugger after GOTRAN has loaded:
+
+```
+$ python3 py1620.py gotran.txt 1000
+
+*** HALT at 18156; press Return to continue; enter 'h' for help or 'q' to quit
+halt> p gotran_input.txt
+*** attaching file: gotran_input.txt
+halt> 
+
+
+*** HALT at 8514; press Return to continue; enter 'h' for help or 'q' to quit
+halt> 
+
+ 001	
+ 002	
+ 003	
+ 004	
+ 005	
+ 006	
+ 007	
+ 008	
+ 009	
+ 010	
+END OF PROGRAM
+
+
+*** HALT at 1842; press Return to continue; enter 'h' for help or 'q' to quit
+halt> 
+```
+
 ### CU01 general op codes diagnostic
 
 Py1620 now completes this important IBM 1620 self test successfully. Tests 51 to 55 have been disabled because Py1620 does not use addition tables.

@@ -374,13 +374,18 @@ def dumpmem():
 
 # debugger prompt
 def debugger(prompt = "debug"):
-    global SINGLE_STEP, PC
+    global SINGLE_STEP, PC, CF
 
     while True:
         inp = input(prompt + "> ").strip()
         if len(inp) == 0:
             break
         # some debugger commands when system has been halted:
+
+        if inp[0] == "p":   # attach a punch card reader input file
+            fn = inp.split()[1]
+            print("*** attaching file:", fn)
+            CF = open(fn)
         if inp[0] == "d":   # save memory dump
             dumpmem()
         if inp[0] == "e":   # examine memory
@@ -426,6 +431,7 @@ def debugger(prompt = "debug"):
             break
         if inp[0] == "h":   # print help
             print("    Available commands when system is halted:")
+            print("      p        attach a punch card reader input file")
             print("      d        save memory dump")
             print("      e        examine memory")
             print("      s        show current sense switch settings")
