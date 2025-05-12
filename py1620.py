@@ -805,21 +805,36 @@ while True:
             OUTFILE.write("\n")
             OUTFILE.flush()
 
-    # WN (TTY)
+    # WN
     if OP == (3, 8):
         n = getim(PC+2)
-        while True:
-            if SLOW:
+        start = n
+        dev = M[PC + 9]
+        if dev == 1:    # TTY
+            while True:
+                if SLOW:
+                    sys.stdout.flush()
+                    time.sleep(.1)
+                if M[n] == RM:
+                    break
+                if F[n]:
+                    print(str(M[n]) + OVER, end="")
+                else:
+                    print(M[n], end="")
                 sys.stdout.flush()
-                time.sleep(.1)
-            if M[n] == RM:
-                break
-            if F[n]:
-                print(str(M[n]) + OVER, end="")
-            else:
-                print(M[n], end="")
-            sys.stdout.flush()
-            n += 1
+                n += 1
+        if dev == 4:    # punch card
+            noflagchar = "0123456789|    "
+            flagchar   = "]JKLMNOPQR!    "
+            while n - start < 80:
+                x = M[n]
+                if F[n]:
+                    OUTFILE.write(flagchar[x])
+                else:
+                    OUTFILE.write(noflagchar[x])
+                n += 1
+            OUTFILE.write("\n")
+            OUTFILE.flush()
 
     # DN
     if OP == (3, 5):
@@ -835,8 +850,8 @@ while True:
                 else:
                     print(M[i], end="")
         if dev == 4:    # punch card
-            noflagchar = "0123456789|"
-            flagchar   = "]JKLMNOPQR!"
+            noflagchar = "0123456789|    "
+            flagchar   = "]JKLMNOPQR!    "
             for i in range(start, MSIZE):
                 x = M[i]
                 if F[i]:
@@ -844,6 +859,7 @@ while True:
                 else:
                     OUTFILE.write(noflagchar[x])
             OUTFILE.write("\n")
+            OUTFILE.flush()
 
     # TF
     if OP == (2, 6):
