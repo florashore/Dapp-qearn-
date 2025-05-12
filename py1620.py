@@ -771,6 +771,7 @@ while True:
     # WA
     if OP == (3, 9):
         n = getim(PC+2)-1
+        start = n
         dev = M[PC+9]
         if dev == 1:    # TTY
             while True:
@@ -788,16 +789,16 @@ while True:
                 sys.stdout.flush()
                 n += 2
         if dev == 4:    # card punch
-            while True:
+            while n - start < 160:
                 c1, c2 = M[n], M[n+1]
                 out = CH_UNDEF      # undefined character
                 if c1 == RM or c2 == RM:
                     OUTFILE.write("|")
-                    break
-                for k in almer.keys():
-                    if almer[k][0] == c1 and almer[k][1] == c2:
-                        out = k
-                OUTFILE.write(out)
+                else:
+                    for k in almer.keys():
+                        if almer[k][0] == c1 and almer[k][1] == c2:
+                            out = k
+                    OUTFILE.write(out)
                 n += 2
             OUTFILE.write("\n")
             OUTFILE.flush()
