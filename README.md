@@ -505,6 +505,8 @@ halt>
 
 GOTRAN is an interactive Fortran-like programming language for the IBM 1620. A program is entered from the typewriter (or read from cards) and after a final ```END``` statement, the machine halts. Starting the machine runs the program. Then it halts again and the next program can be entered.
 
+Here is GOTRAN running two programs. The first one computes the sine for different angles, the second one the Fibonacci sequence:
+
 ```
 $ python3 py1620.py gotran.txt 
 
@@ -537,6 +539,60 @@ halt>
  008	 4.5000000	-.97753012	
  009	 5.1000000	-.92581468	
  010	 5.7000000	-.55068554	
+END OF PROGRAM
+
+
+*** HALT at 1842; press Return to continue; enter 'h' for help or 'q' to quit
+halt> 
+a=1.
+
+b=1.
+
+do 1 i=3,30
+
+c=a+b
+
+print,i,c
+
+a=b
+
+1 b=c
+
+end
+
+
+
+*** HALT at 8514; press Return to continue; enter 'h' for help or 'q' to quit
+halt> 
+
+ 003	 2.0000000	
+ 004	 3.0000000	
+ 005	 5.0000000	
+ 006	 8.0000000	
+ 007	 13.000000	
+ 008	 21.000000	
+ 009	 34.000000	
+ 010	 55.000000	
+ 011	 89.000000	
+ 012	 144.00000	
+ 013	 233.00000	
+ 014	 377.00000	
+ 015	 610.00000	
+ 016	 987.00000	
+ 017	 1597.0000	
+ 018	 2584.0000	
+ 019	 4181.0000	
+ 020	 6765.0000	
+ 021	 10946.000	
+ 022	 17711.000	
+ 023	 28657.000	
+ 024	 46368.000	
+ 025	 75025.000	
+ 026	 121393.00	
+ 027	 196418.00	
+ 028	 317811.00	
+ 029	 514229.00	
+ 030	 832040.00	
 END OF PROGRAM
 
 
