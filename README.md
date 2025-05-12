@@ -677,7 +677,16 @@ NUM INFO ABOVE OFFSET TO RIGHT TWO SPACES BETWEEN 5 AND 6 THREE LINES OF DATA
 199760123456789‡1̅2̅199989
 TEST ROUTINES COMPLETED. IF SW1 OFF AND NO ROUTINE NOS TYPED OUT, MACHINE PERFORMED TESTS PROPERLY.
 *** HALT at 16236; press Return to continue; enter 'h' for help or 'q' to quit
+halt> p out.txt
+*** attaching file: out.txt
 halt> 
+
+1997601234567891̅2̅199989
+.)+$*-/,(=@ ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789                                    H     ЖЖ*Ж 
+.)+$*-/,(=@ ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789                                    H     ЖЖ*Ж 
+.)+$*-/,(=@ ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789                                    H     ЖЖ*Ж 
+
+*** HALT at 16500; press Return to continue; enter 'h' for help or 'q' to quit
 ```
 
 ### Credits
