@@ -682,9 +682,9 @@ halt> p out.txt
 halt> 
 
 1997601234567891̅2̅199989
-.)+$*-/,(=@ ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789                                    H     ЖЖ*Ж 
-.)+$*-/,(=@ ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789                                    H     ЖЖ*Ж 
-.)+$*-/,(=@ ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789                                    H     ЖЖ*Ж 
+.)+$*-/,(=@ ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789
+.)+$*-/,(=@ ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789
+.)+$*-/,(=@ ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789
 
 *** HALT at 16500; press Return to continue; enter 'h' for help or 'q' to quit
 ```

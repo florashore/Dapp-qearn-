@@ -792,6 +792,7 @@ while True:
                 c1, c2 = M[n], M[n+1]
                 out = CH_UNDEF      # undefined character
                 if c1 == RM or c2 == RM:
+                    OUTFILE.write("|")
                     break
                 for k in almer.keys():
                     if almer[k][0] == c1 and almer[k][1] == c2:
