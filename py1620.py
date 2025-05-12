@@ -831,12 +831,14 @@ while True:
                 else:
                     print(M[i], end="")
         if dev == 4:    # punch card
-            flagchar = "]JKLMNOPQR"
+            noflagchar = "0123456789|"
+            flagchar   = "]JKLMNOPQR!"
             for i in range(start, MSIZE):
+                x = M[i]
                 if F[i]:
-                    OUTFILE.write(flagchar[M[i]])
+                    OUTFILE.write(flagchar[x])
                 else:
-                    OUTFILE.write(str(M[i]))
+                    OUTFILE.write(noflagchar[x])
             OUTFILE.write("\n")
 
     # TF
