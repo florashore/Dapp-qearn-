@@ -639,16 +639,17 @@ halt>
 *** HALT at 8514; press Return to continue; enter 'h' for help or 'q' to quit
 halt> 
 
- 001	
- 002	
- 003	
- 004	
- 005	
- 006	
- 007	
- 008	
- 009	
- 010	
+ .00	  * HELLO FROM GOTRAN *
+ .00	    * HELLO FROM GOTRAN *
+ .00	      * HELLO FROM GOTRAN *
+ .00	        * HELLO FROM GOTRAN *
+ .00	          * HELLO FROM GOTRAN *
+ .00	            * HELLO FROM GOTRAN *
+ .00	          * HELLO FROM GOTRAN *
+ .00	        * HELLO FROM GOTRAN *
+ .00	      * HELLO FROM GOTRAN *
+ .00	    * HELLO FROM GOTRAN *
+ .00	  * HELLO FROM GOTRAN *
 END OF PROGRAM
 
 

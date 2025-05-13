@@ -1,4 +1,32 @@
-do 1 i=1,10
-1 print,i
+a=0.
+b=1.
+c=0.
+d=2.
+e=-5.
+do 1 i=1,11
+print,a
+c=c+d
+e=e+1.
+if (e) 3,3,2
+2 d=-2.
+3 continue
+plot (c,*)
+plot (b,h)
+plot (a,e)
+plot (a,l)
+plot (a,l)
+plot (a,o)
+plot (b,f)
+plot (a,r)
+plot (a,o)
+plot (a,m)
+plot (b,g)
+plot (a,o)
+plot (a,t)
+plot (a,r)
+plot (a,a)
+plot (a,n)
+plot (b,*)
+1 continue
 end
 
