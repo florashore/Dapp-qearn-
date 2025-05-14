@@ -1089,8 +1089,7 @@ while True:
     # TDM
     if OP == (1, 5):
         p = getim(PC+2)
-        q = getim(PC+7)
-        M[p] = abs(q)
+        M[p] = M[PC+11]
         F[p] = F[PC+11]
 
     # K
