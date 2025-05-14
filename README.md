@@ -39,6 +39,9 @@ See the [IBM1620-Baseball](https://github.com/mdoege/IBM1620-Baseball) repo for 
 * block.txt: punch block letter messages into punch cards
 * cal.txt: day of the week calculator
 * gotran.txt: the GOTRAN interactive programming language
+* pdq.txt: PDQ Fortran compiler
+* pdq-fixed.txt: PDQ Fortran compiler subroutines (fixed format)
+* pdq-free.txt: PDQ Fortran compiler subroutines (free format)
 * tic3d.txt: 3D tic-tac-toe on a 4x4x4 grid
 * tic.txt: normal 3x3 tic-tac-toe
 
@@ -655,6 +658,87 @@ END OF PROGRAM
 
 *** HALT at 1842; press Return to continue; enter 'h' for help or 'q' to quit
 halt> 
+```
+
+### PDQ Fortran
+
+PDQ Fortran does not need floating point instructions (unlike IBM Fortran), so it works with this emulator.
+
+First, create a new card deck which contains the Fortran compiler, the source code to be compiled, and one of the (free or fixed format) Fortran subroutine decks. (Note that the Fortran source code should not have a newline at the end!)
+
+```$ cat pdq.txt test.f pdq-fixed.txt > pdq-deck.txt```
+
+Then run that deck to compile your program and get an object deck:
+
+```
+$ python3 py1620.py pdq-deck.txt 0101 out.txt
+
+PDQ FORTRAN C2  
+START
+]6600        X=0
+]6636        PRINT 3
+]6648   3    FORMAT (36H           X      SIN(X)      COS(X))
+]6744        DO 1 I=1,10
+]6756        Y=SIN(X)
+]6780        Z=COS(X)
+]6804        PRINT 2,X,Y,Z
+]6852   2    FORMAT (3F12.6)
+]6884   1    X=X+.3
+]6956        END
+1̅9999 SIN  
+1̅9989 SINF 
+1̅9979 COS  
+1̅9969 COSF 
+1̅9959 EXP  
+1̅9949 EXPF 
+1̅9939 LOG  
+1̅9929 LOGF 
+1̅9919 SQRT 
+1̅9909 SQRTF
+1̅9899 ABS  
+1̅9889 ABSF 
+1̅9879 DRH  
+1̅9869 DRHF 
+1̅9859 ATAN 
+1̅9849 ATANF
+1̅9839 X    
+1̅9829 0̅000̅
+1̅9819 0̅003
+1̅9809 0̅001
+1̅9799 I    
+1̅9789 Y    
+1̅9779 0̅00
+1̅9769 Z    
+1̅9759 0̅002
+1̅9749 5̅030000000̅
+
+LOAD SUBROUTINES
+PDQ FIXED FMT SUBROUTNS 11/63
+PROCESSING COMPLETE
+*** HALT at 1864; press Return to continue; enter 'h' for help or 'q' to quit
+halt> q
+```
+
+Quit the emulator and run the compiled program:
+
+```
+$ python3 py1620.py out.txt 
+
+LOAD DATA
+           X      SIN(X)      COS(X)
+     .000000     .000000    1.000000
+     .300000     .295520     .955336
+     .600000     .564642     .825335
+     .900000     .783326     .621609
+    1.200000     .932039     .362357
+    1.500000     .997494     .070737
+    1.800000     .973847    -.227202
+    2.100000     .863209    -.504846
+    2.400000     .675463    -.737393
+    2.700000     .427379    -.904072
+END
+*** HALT at 2524; press Return to continue; enter 'h' for help or 'q' to quit
+halt> q
 ```
 
 ### CU01 general op codes diagnostic
