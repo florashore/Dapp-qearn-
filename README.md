@@ -671,7 +671,7 @@ First, create a new card deck which contains the Fortran compiler, the source co
 Then run that deck to compile your program and get an object deck:
 
 ```
-$ python3 py1620.py pdq-deck.txt 0101 out.txt
+$ python3 py1620.py pdq-deck.txt 0101 test.txt
 
 PDQ FORTRAN C2  
 START
@@ -722,7 +722,7 @@ halt> q
 Quit the emulator and run the compiled program:
 
 ```
-$ python3 py1620.py out.txt 
+$ python3 py1620.py test.txt
 
 LOAD DATA
            X      SIN(X)      COS(X)
