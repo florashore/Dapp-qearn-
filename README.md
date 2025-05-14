@@ -664,7 +664,7 @@ halt>
 
 PDQ Fortran does not need floating point instructions (unlike IBM Fortran), so it works with this emulator.
 
-First, create a new card deck which contains the Fortran compiler, the source code to be compiled, and one of the (free or fixed format) Fortran subroutine decks. (Note that the Fortran source code should not have a newline at the end!)
+First, create a new card deck which contains the Fortran compiler, the source code to be compiled, and one of the (free or fixed format) Fortran subroutine decks. (Note that the Fortran source code should not have extra newlines at the end, as this would introduce empty cards into the deck!)
 
 ```$ cat pdq.txt test.f pdq-fixed.txt > pdq-deck.txt```
 
