@@ -787,5 +787,6 @@ IBM punch card  image from [Douglas W. Jones's punched card collection](https://
 ### Further reading
 
 * [Basic Programming Concepts and the IBM 1620 Computer](http://www.bitsavers.org/pdf/ibm/1620/Basic_Programming_Concepts_and_the_IBM_1620_Computer_1962.pdf)
+* [PDQ Fortran manual](https://bitsavers.org/pdf/ibm/1620/general_program_library/2.6_031_PDQ_FORTRAN.pdf)
 * [Bitsavers IBM 1620 documentation](https://bitsavers.org/pdf/ibm/1620/)
 
