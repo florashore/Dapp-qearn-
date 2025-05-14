@@ -842,6 +842,9 @@ while True:
         dev = M[PC + 9]
         if dev == 1:    # TTY
             for i in range(start, MSIZE):
+                if SLOW:
+                    sys.stdout.flush()
+                    time.sleep(.1)
                 if M[i] == RM:
                     print(CH_REC, end="")
                     continue
