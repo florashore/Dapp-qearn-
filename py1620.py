@@ -229,6 +229,8 @@ def cardline_alpha(pos):
         debugger("halt")
 
     l = CF.readline().rstrip()
+    if len(l) < 80:
+        l += " " * (80 - len(l))
     if l == "":
         IND["LASTCARD"] = True
     CARDNUM += 1
