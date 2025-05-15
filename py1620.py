@@ -46,6 +46,7 @@ OVER = "\u0305"     # overbar character
 CH_UNDEF = "\u0416" # undefined character
 CH_REC = "\u2021"   # record mark double dagger character
 CARDNUM = 0         # current card number
+CARDTOTAL = 0       # total number of cards in deck
 BRANCH_BACK = 0     # saved subroutine return address
 
 # define a circular array (because memory on the IBM 1620 is circular)
@@ -173,6 +174,10 @@ for l in c.splitlines():
     x,y = l.split(" ")
     cmd[x] = y.strip()
 
+# get total number of lines in card file
+def get_card_total(fn):
+    return len(open(fn).readlines())
+
 # read a punch card line to pos (numeric)
 def cardline(pos):
     global CARDNUM, PC
@@ -182,9 +187,9 @@ def cardline(pos):
         debugger("halt")
 
     l = CF.readline().rstrip()
-    if l == "":
-        IND["LASTCARD"] = True
     CARDNUM += 1
+    if CARDNUM == CARDTOTAL:
+        IND["LASTCARD"] = True
     #CMD.write(l + "\n")
     #print("*** reading punch card: ", CARDNUM)
     #print(l, pos)
@@ -231,9 +236,9 @@ def cardline_alpha(pos):
     l = CF.readline().rstrip()
     if len(l) < 80:
         l += " " * (80 - len(l))
-    if l == "":
-        IND["LASTCARD"] = True
     CARDNUM += 1
+    if CARDNUM == CARDTOTAL:
+        IND["LASTCARD"] = True
     #print("*** reading alphanumeric punch card: ", CARDNUM)
     #print(l, pos)
     for i, x in enumerate(l):
@@ -249,6 +254,7 @@ def cardline_alpha(pos):
 # open a punch card file (in SIMH txt format)
 if not CMEM:
     CF = open(CARD_FILE)
+    CARDTOTAL = get_card_total(CARD_FILE)
     cardline(0)     # read first line from punch card file CF
 
 # Method 2: load a CMEM core file into memory:
@@ -378,7 +384,7 @@ def dumpmem():
 
 # debugger prompt
 def debugger(prompt = "debug"):
-    global SINGLE_STEP, PC, CF
+    global SINGLE_STEP, PC, CF, CARDNUM, CARDTOTAL
 
     while True:
         inp = input(prompt + "> ").strip()
@@ -388,8 +394,11 @@ def debugger(prompt = "debug"):
 
         if inp[0] == "p":   # attach a punch card reader input file
             fn = inp.split()[1]
-            print("*** attaching file:", fn)
             CF = open(fn)
+            CARDTOTAL = get_card_total(fn)
+            CARDNUM = 0
+            IND["LASTCARD"] = False
+            print("*** attaching file", fn, "with", CARDTOTAL, "cards")
         if inp[0] == "d":   # save memory dump
             dumpmem()
         if inp[0] == "e":   # examine memory

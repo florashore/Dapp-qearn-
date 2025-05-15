@@ -635,7 +635,7 @@ $ python3 py1620.py gotran.txt 1000
 
 *** HALT at 18156; press Return to continue; enter 'h' for help or 'q' to quit
 halt> p gotran_input.txt
-*** attaching file: gotran_input.txt
+*** attaching file gotran_input.txt with 32 cards
 halt> 
 
 
