@@ -52,7 +52,9 @@ See the [IBM1620-Baseball](https://github.com/mdoege/IBM1620-Baseball) repo for 
 
 ### Why emulate the IBM 1620?
 
-The IBM 1620 feels similar in some ways to an early DEC PDP such as the PDP-8, but also opposite in other aspects, which makes it an interesting target for emulation. Both the 1620 and the PDP-8 could be considered early personal computers, apart from their high price tags and more limited production runs.
+The decimal-based IBM 1620 (codename CADET) computer was intended for science and engineering applications and was, like its business-oriented counterpart the IBM 1401 (codename SPACE), part of IBM's late 1950s effort to produce smaller, more affordable computers using the latest technology (core memory, transistors) that would appeal to budget-conscious first-time buyers such as Universities and mid-size business. Both computers were announced in 1959, were very successful in their respective niches and were often in use into the early 1970s. They were also kept alive by emulation, as IBM 360-type mainframes supported emulating them.
+
+In practice, the IBM 1620 feels similar in some ways to an early DEC PDP such as the PDP-8, but also opposite in other aspects, which makes it an interesting target for emulation. Both the 1620 and the PDP-8 could be considered early personal computers, apart from their high price tags and more limited production runs.
 
 Similarities between the IBM 1620 and a PDP-8 include: They are friendly minicomputers, not too expensive (by the standards of the day), ideal for interactive use and games. Their basic operation is quite simple, with just the computer, a terminal (teletype/typewriter), and input/output via paper media required. Magnetic storage media were supported but optional for most software (making it easier to write an emulator for these machines). An operating system is not needed; most programs run on bare metal.
 
@@ -61,6 +63,8 @@ But in many ways the 1620 and a PDP are also very different: punch cards (1620) 
 The main reasons why the IBM 1620 is relatively obscure today compared to the more ubiquitous DEC PDP are probably that fewer 1620s were built, that they were more expensive, and that IBM customers typically rented their machines rather than purchased them, therefore fewer 1620s still exist today.
 
 A major advantage of the IBM 1620 for emulation is that a lot of software for the system has survived on punch cards, mainly from Bitsavers and the CHM collection, and that it includes quite a few games and interactive demos. This is helpful when writing an emulator, because programs of different complexity which exercise the machine in different ways are ideal for testing.
+
+Decimal computers with variable-length data words like the 1620 are also interesting because their operation corresponds more obviously to a Turing machine than binary computers: E.g. a Turing machine can add two decimal numbers which are next to each other on the tape by performing addition digit by digit. (There are online Turing machine simulators that demonstrate this kind of program.) The 1620 also works digits by digit and it even uses a state transition table like a Turing machine because it has no adder, so it has to look up in memory the fact that e.g. 3 + 4 = 7. A lot of the time, the 1620 is either searching left until it finds a flag bit on the high digit of a number or searching right until a record mark, so the Turing machine analogy is pretty clear.
 
 ![IBM 1620](IBM_1620_at_CHM.jpg "IBM 1620 at the Computer History Museum in 2006")
 
