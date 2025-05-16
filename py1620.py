@@ -425,7 +425,7 @@ def debugger(prompt = "debug"):
             sw_out = "".join(["1" if q else "0" for q in SENSE_SW])
             print("sense switches: " + sw_out)
         if inp[0] == "t":   # toggle a sense switch with t1, t2, t3, t4
-            sw = int(inp[1])
+            sw = int(inp[1:])
             SENSE_SW[sw - 1] = not SENSE_SW[sw - 1]
             sw_out = "".join(["1" if q else "0" for q in SENSE_SW])
             print("sense switches now: " + sw_out)
