@@ -22,7 +22,11 @@ To run the slot machine / one-armed bandit, playing for 50 cents (sense switch 4
 
 Without any arguments, the tic-tac-toe game is run.
 
-If the ```SLOW``` parameter in line 7 of py1620.py is set to True, terminal output speed will be limited to 10 characters per second like a typewriter on a real IBM 1620. This setting makes sense especially for the baseball game and the 99 bottles of beer demo, because otherwise output will scroll by much too fast to read.
+Machine memory size (```MSIZE```) is defined on line 39 of py1620.py. The IBM 1620 was also available with 40,000 or 60,000 digits of memory and supported up to 100,000 digits in principle. However, some programs (like the day of the week program) will not work with memory sizes larger than 20k, therefore this remains the default.
+
+The Fortran compiler especially benefits from 40k digits or more, as its symbol table is limited to 200 entries on 20k systems, which is not enough to compile larger programs.
+
+If the ```SLOW``` parameter on line 7 of py1620.py is set to True, terminal output speed will be limited to 10 characters per second like a typewriter on a real IBM 1620. This setting makes sense especially for the baseball game and the 99 bottles of beer demo, because otherwise output will scroll by much too fast to read.
 
 Py1620 uses a Unicode combining character to display overbars for digits with an active flag bit. These overbars may not look all that great with some terminal fonts, e.g. they may be shifted horizontally in respect to the digit below. Switching to a different terminal font with better overbar support (like [GNU Unifont](https://unifoundry.com/unifont/)) will solve this issue.
 
