@@ -46,6 +46,7 @@ See the [IBM1620-Baseball](https://github.com/mdoege/IBM1620-Baseball) repo for 
 * pdq.txt: PDQ Fortran compiler
 * pdq-fixed.txt: PDQ Fortran compiler subroutines (fixed format)
 * pdq-free.txt: PDQ Fortran compiler subroutines (free format)
+* sps.txt: Symbolic Programming System (assembler)
 * tic3d.txt: 3D tic-tac-toe on a 4x4x4 grid
 * tic.txt: normal 3x3 tic-tac-toe
 
@@ -53,6 +54,12 @@ See the [IBM1620-Baseball](https://github.com/mdoege/IBM1620-Baseball) repo for 
 
 * APP_Power_Of_2.cmem: power of 2 demo program from the Computer History Museum, originally programmed in 2005 when they restored an IBM 1620 and exhibited it in the museum
 * CU01.cmem: IBM diagnostic to test if CPU instructions work properly. Originally intended for finding hardware faults on a real IBM 1620, but also useful now for testing the accuracy of emulators such as this one.
+
+#### Source code
+
+* gotran_input.txt: GOTRAN
+* hello.sps: assembly
+* test.f: Fortran
 
 ### Why emulate the IBM 1620?
 
@@ -749,6 +756,61 @@ END
 halt> q
 ```
 
+### Symbolic Programming System (assembler)
+
+Here is the assembly source file hello.sps. Labels start in column 6, mnemonics in column 12, and arguments in column 16:
+
+```
+     START WATYHELLO
+           H
+     HELLO DAC 12,HELLO WORLD@
+           DENDSTART
+```
+
+The program prints (```WATY```) the hello string defined with ```DAC``` and then halts (```H```).  "@" is a record mark. ```DEND``` ("define end") has to be the final instruction.
+
+This is a two-pass assembler, so the source file has to be read twice:
+
+```
+$ python3 py1620.py sps.txt 1010 hello.txt
+
+*** HALT at 0; press Return to continue; enter 'h' for help or 'q' to quit
+halt> p hello.sps
+*** attaching file hello.sps with 4 cards
+halt> 
+
+END OF PASSI  
+*** HALT at 12040; press Return to continue; enter 'h' for help or 'q' to quit
+halt> p hello.sps
+*** attaching file hello.sps with 4 cards
+halt> 
+
+     START  WATY HELLO
+	00402 39 00427 00100
+            H     
+	00414 48 00000 00000
+     HELLO  DAC  12,HELLO WORLD@
+	00427 00012
+            DEND START
+	00402
+END OF PASSII 
+00402   START   00427   HELLO   
+*** HALT at 12664; press Return to continue; enter 'h' for help or 'q' to quit
+halt> q
+```
+
+Running the program:
+
+```
+$ python3 py1620.py hello.txt
+
+*** HALT at 0; press Return to continue; enter 'h' for help or 'q' to quit
+halt> 
+HELLO WORLD
+*** HALT at 414; press Return to continue; enter 'h' for help or 'q' to quit
+halt> 
+```
+
 ### CU01 general op codes diagnostic
 
 Py1620 now completes this important IBM 1620 self test successfully. Tests 51 to 55 have been disabled because Py1620 does not use addition tables.
@@ -796,5 +858,6 @@ IBM punch card  image from [Douglas W. Jones's punched card collection](https://
 
 * [Basic Programming Concepts and the IBM 1620 Computer](http://www.bitsavers.org/pdf/ibm/1620/Basic_Programming_Concepts_and_the_IBM_1620_Computer_1962.pdf)
 * [PDQ Fortran manual](https://bitsavers.org/pdf/ibm/1620/general_program_library/2.6_031_PDQ_FORTRAN.pdf)
+* [SPS manual](https://bitsavers.org/pdf/ibm/1620/C26-5600-1_Symbolic_Programming_System_Apr63.pdf)
 * [Bitsavers IBM 1620 documentation](https://bitsavers.org/pdf/ibm/1620/)
 
