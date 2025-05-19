@@ -61,6 +61,8 @@ See the [IBM1620-Baseball](https://github.com/mdoege/IBM1620-Baseball) repo for 
 * hello.sps: assembly
 * test.f: Fortran
 
+The ```rosetta_code/``` directory contains four assembly programs which were created for [Rosetta Code](https://rosettacode.org/wiki/Category:IBM_1620_SPS): a cellular automaton, Fibonacci numbers, FizzBuzz, and the Mandelbrot set. Except for the Mandelbrot set (which requires floating-point instructions), all programs work in Py1620. Assembly was done with [SPS1620](https://github.com/IBM-1620/SPS1620), a Java-based cross-assembler.
+
 ### Why emulate the IBM 1620?
 
 The decimal-based IBM 1620 (codename CADET) computer was intended for science and engineering applications and was, like its business-oriented counterpart the IBM 1401 (codename SPACE), part of IBM's late 1950s effort to produce smaller, more affordable computers using the latest technology (core memory, transistors) that would appeal to budget-conscious first-time buyers such as Universities and mid-size business. Both computers were announced in 1959, were very successful in their respective niches and were often in use into the early 1970s. They were also kept alive by emulation, as IBM 360-type mainframes supported emulating them.

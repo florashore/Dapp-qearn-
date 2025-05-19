@@ -1,0 +1,71 @@
+IBM 1620 Jr. SPS Assembler (v1.05)    Source: /home/martin/git/Py1620/fibo.sps    Assembled: 5/17/2025 @ 19:57
+
+      1  00402 34 00000 00102        START  RCTY                 ,,, RETURN CARRIAGE
+      2  00414 27 00480 00712        LOOP   BT   FIBO,FIBN       ,,, PASS FIBN VALUE TO FUNCTION FIBO
+                        _    
+      3  00426 11 00712 00001               AM   FIBN,1          ,,, ADD 1 TO FIBN
+                        _    
+      4  00438 14 00712 00020               CM   FIBN,20         ,,, LOOP OVER THE FIRST 20 FIBONACCI NUMBERS
+      5  00450 47 00414 01200               BNE  LOOP            ,,, JUMP BACK TO LOOP IF 20 NOT YET REACHED
+      6  00462 48 00000 00000               H                    ,,, HALT WHEN DONE
+               _             
+      7  00474 00000                 N      DC   5,0             ,,, INPUT VALUE N GOES HERE
+                        _    
+      8  00480 14 00479 00003        FIBO   CM   FIBO-1,3        ,,, START OF FIBONACCI FUNCTION
+      9  00492 47 00672 01300               BL   PRINT           ,,, JUMP TO PRINT AND OUTPUT 1 IF N LESS THAN 3
+                        _    
+     10  00504 16 00723 00002               TFM  L2,2            ,,, OTHERWISE SET UP VARIABLES FOR SUMMATION LOOP
+                        _    
+     11  00516 16 00728 00001               TFM  A,1
+                        _    
+     12  00528 16 00733 00001               TFM  B,1
+                        _    
+     13  00540 16 00739 00000        LOOP2  TFM  C,0             ,,, ITERATIVE LOOP FOR SUMMING VALUE
+     14  00552 21 00739 00728               A    C,A
+     15  00564 21 00739 00733               A    C,B
+     16  00576 26 00728 00733               TF   A,B
+     17  00588 26 00733 00739               TF   B,C
+                        _    
+     18  00600 11 00723 00001               AM   L2,1
+     19  00612 24 00723 00479               C    L2,FIBO-1
+     20  00624 47 00540 01300               BL   LOOP2
+     21  00636 38 00730 00100               WNTY B-3             ,,, OUTPUT B (SHOWING LAST 4 DIGITS)
+     22  00648 34 00000 00102               RCTY
+     23  00660 42 00000 00000               BB                   ,,, BRANCH BACK TO MAIN LOOP
+     24  00672 38 00714 00100        PRINT  WNTY ONE-3           ,,, OUTPUT 1
+     25  00684 34 00000 00102               RCTY
+     26  00696 42 00000 00000               BB                   ,,, BRANCH BACK TO MAIN LOOP
+               _             
+     27  00708 00001                 FIBN   DC   5,1             ,,, WHICH FIBONACCI NUMBER TO PRINT
+               _             
+     28  00713 00001                 ONE    DC   5,1
+     29  00718 @                            DC   1,@             ,,, ADD A RECORD MARK SO ONE CAN BE PRINTED
+               _             
+     30  00719 00000                 L2     DC   5,0             ,,, LOOP 2 INDEX
+               _             
+     31  00724 00000                 A      DC   5,0
+               _             
+     32  00729 00000                 B      DC   5,0
+     33  00734 @                            DC   1,@             ,,, ADD A RECORD MARK SO B CAN BE PRINTED
+               _             
+     34  00735 00000                 C      DC   5,0
+     35  00402                              DEND START
+
+                                 Symbol Cross-Reference Table
+                                 ============================
+
+
+  Symbol   Addr.  Type    Defined  References
+  -------  -----  ------  -------  -------------------------------------------------------------
+  A        00728  DC           31       11       14       16
+  B        00733  DC           32       12       15       16       17       21
+  C        00739  DC           34       13       14       15       17
+  FIBN     00712  DC           27        2        3        4
+  FIBO     00480  <inst>        8        2        8       19
+  L2       00723  DC           30       10       18       19
+  LOOP     00414  <inst>        2        5
+  LOOP2    00540  <inst>       13       20
+  N        00478  DC            7
+  ONE      00717  DC           28       24
+  PRINT    00672  <inst>       24        9
+  START    00402  <inst>        1       35

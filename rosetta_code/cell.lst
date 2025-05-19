@@ -1,0 +1,98 @@
+IBM 1620 Jr. SPS Assembler (v1.05)    Source: /home/martin/git/Py1620/cell.sps    Assembled: 5/18/2025 @ 16:54
+
+      1  00402 34 00000 00102        START  RCTY                 ,,, RETURN CARRIAGE
+      2  00414 38 00823 00100        LOOP   WNTY OLD-19          ,,, LOOP FOR EACH ITERATION
+                        _    
+      3  00426 16 00896 00018               TFM  POS,18
+      4  00438 26 00864 00886               TF   NEW,NULL
+                        _    
+      5  00450 16 00921 00000        LOOP2  TFM  COUNT,0         ,,, LOOP OVER ROW
+                        _    
+      6  00462 16 00901 00842               TFM  POSMEM,OLD
+      7  00474 22 00901 00896               S    POSMEM,POS
+      8  00486 26 00906 00901               TF   PFROM,POSMEM
+                        _    
+      9  00498 12 00906 00001               SM   PFROM,1
+     10  00510 26 00533 00906               TF   TEST1+11,PFROM
+     11  00522 25 00916 00906        TEST1  TD   TEST,PFROM      ,,, TRANSFER DIGIT 1 TO TEST AREA
+     12  00534 21 00921 00916               A    COUNT,TEST
+                        _    
+     13  00546 11 00906 00001               AM   PFROM,1
+     14  00558 26 00581 00906               TF   TEST2+11,PFROM
+     15  00570 25 00916 00906        TEST2  TD   TEST,PFROM      ,,, TRANSFER DIGIT 2 TO TEST AREA
+     16  00582 21 00921 00916               A    COUNT,TEST
+                        _    
+     17  00594 11 00906 00001               AM   PFROM,1
+     18  00606 26 00629 00906               TF   TEST3+11,PFROM
+     19  00618 25 00916 00906        TEST3  TD   TEST,PFROM      ,,, TRANSFER DIGIT 3 TO TEST AREA
+     20  00630 21 00921 00916               A    COUNT,TEST
+                        _    
+     21  00642 14 00921 00002               CM   COUNT,2         ,,, CHECK IF COUNT EQUALS 2
+     22  00654 47 00714 01200               BNE  ZERO
+                        _    
+     23  00666 16 00911 00864               TFM  POSTO,NEW
+     24  00678 22 00911 00896               S    POSTO,POS
+     25  00690 26 00708 00911               TF   FLAG+6,POSTO
+     26  00702 15 00911 00001        FLAG   TDM  POSTO,1
+                        _    
+     27  00714 12 00896 00001        ZERO   SM   POS,1
+                        _    
+     28  00726 14 00896 00001               CM   POS,1
+     29  00738 47 00450 01200               BNE  LOOP2           ,,, LOOP UNTIL ROW COMPLETE
+                        _    
+     30  00750 11 00891 00001               AM   IT,1
+     31  00762 26 00842 00864               TF   OLD,NEW
+     32  00774 34 00000 00102               RCTY
+                        _    
+     33  00786 14 00891 00010               CM   IT,10
+     34  00798 47 00414 01200               BNE  LOOP            ,,, RUN 10 ITERATIONS
+     35  00810 48 00000 00000               H
+               _             
+     36  00822 001110..100100        OLD    DC   21,01110110101010100100
+     37  00843 @                            DC   1,@
+               _             
+     38  00844 000000..000000        NEW    DC   21,0
+     39  00865 @                            DC   1,@
+               _             
+     40  00866 000000..000000        NULL   DC   21,00000000000000000000
+               _             
+     41  00887 00000                 IT     DC   5,0
+               _             
+     42  00892 00000                 POS    DC   5,0
+               _             
+     43  00897 00000                 POSMEM DC   5,0
+               _             
+     44  00902 00000                 PFROM  DC   5,0
+               _             
+     45  00907 00000                 POSTO  DC   5,0
+               _             
+     46  00912 00000                 TEST   DC   5,0
+               _             
+     47  00917 00000                 COUNT  DC   5,0
+     48  00402                              DEND START
+
+                                 Symbol Cross-Reference Table
+                                 ============================
+
+
+  Symbol   Addr.  Type    Defined  References
+  -------  -----  ------  -------  -------------------------------------------------------------
+  COUNT    00921  DC           47        5       12       16       20       21
+  FLAG     00702  <inst>       26       25
+  IT       00891  DC           41       30       33
+  LOOP     00414  <inst>        2       34
+  LOOP2    00450  <inst>        5       29
+  NEW      00864  DC           38        4       23       31
+  NULL     00886  DC           40        4
+  OLD      00842  DC           36        2        6       31
+  PFROM    00906  DC           44        8        9       10       11       13       14       15
+                                        17       18       19
+  POS      00896  DC           42        3        7       24       27       28
+  POSMEM   00901  DC           43        6        7        8
+  POSTO    00911  DC           45       23       24       25       26
+  START    00402  <inst>        1       48
+  TEST     00916  DC           46       11       12       15       16       19       20
+  TEST1    00522  <inst>       11       10
+  TEST2    00570  <inst>       15       14
+  TEST3    00618  <inst>       19       18
+  ZERO     00714  <inst>       27       22
