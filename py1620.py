@@ -288,7 +288,7 @@ def getim(x):
 # get immediate value (stopping at flag) as a tuple of (string, sign)
 def getimflag(x):
     s = ""
-    for i in range(4, -1, -1):
+    for i in range(4, -11, -1):
         s = str(M[x + i]) + s
         if F[x + i] and i < 4:
             break
@@ -917,7 +917,7 @@ while True:
     # BTM
     if OP == (1, 7):
         pos = getim(PC+2)
-        for i in range(4, -1, -1):
+        for i in range(4, -11, -1):    # SPS wants to copy more than 5 digits with BTM!
             M[pos-5+i] = M[PC+7+i]
             F[pos-5+i] = F[PC+7+i]
             if i < 4 and F[PC+7+i]:
