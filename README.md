@@ -835,7 +835,7 @@ NUM INFO ABOVE OFFSET TO RIGHT TWO SPACES BETWEEN 5 AND 6 THREE LINES OF DATA
 TEST ROUTINES COMPLETED. IF SW1 OFF AND NO ROUTINE NOS TYPED OUT, MACHINE PERFORMED TESTS PROPERLY.
 *** HALT at 16236; press Return to continue; enter 'h' for help or 'q' to quit
 halt> p out.txt
-*** attaching file: out.txt
+*** attaching file out.txt with 4 cards
 halt> 
 
 1997601234567891̅2̅199989
