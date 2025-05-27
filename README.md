@@ -22,6 +22,8 @@ To run the slot machine / one-armed bandit, playing for 50 cents (sense switch 4
 
 Without any arguments, the tic-tac-toe game is run.
 
+Pressing Ctrl-C enters the debugger, where "h" prints help, "q" quits the emulator, and "c" (or just Return) continues emulation.
+
 Machine memory size (```MSIZE```) is defined on line 39 of py1620.py. The IBM 1620 was also available with 40,000 or 60,000 digits of memory and supported up to 100,000 digits in principle. However, some programs (like the day of the week program) will not work with memory sizes larger than 20k, therefore this remains the default.
 
 The Fortran compiler especially benefits from 40k digits or more, as its symbol table is limited to 200 entries on 20k systems, which is not enough to compile larger programs.
@@ -40,6 +42,7 @@ See the [IBM1620-Baseball](https://github.com/mdoege/IBM1620-Baseball) repo for 
 * base.txt: baseball simulator (new)
 * bbc1.txt: baseball simulator (old)
 * beer.txt: 99 Bottles of Beer demo (2005)
+* black.txt: Blackjack game
 * block.txt: punch block letter messages into punch cards
 * cal.txt: day of the week calculator
 * gotran.txt: the GOTRAN interactive programming language
@@ -279,6 +282,77 @@ TO SPIN THE WHEELS, PUSH START WITH GREAT VIGOR.
 
 *** HALT at 1838; press Return to continue; enter 'h' for help or 'q' to quit
 halt> 
+```
+
+### Blackjack
+
+After the program has explained the sense switch settings, it will enter an infinite loop. Press Ctrl-C to start the debugger, then toggle sense switch 1 and continue. This will begin the game.
+
+The player's cards are in the left column; the computer's in the right column.
+
+```
+$ python3 py1620.py black.txt 
+
+*** HALT at 0; press Return to continue; enter 'h' for help or 'q' to quit
+halt> 
+
+BLACKJACK GAME 08-1-64
+
+CLEAR ALL TYPEWRITER TAB STOPS.
+*** HALT at 486; press Return to continue; enter 'h' for help or 'q' to quit
+halt> 
+
+SET TABS AT FOLLOWING STOP POINTS.
+               
+*** HALT at 546; press Return to continue; enter 'h' for help or 'q' to quit
+halt> 
+               
+*** HALT at 570; press Return to continue; enter 'h' for help or 'q' to quit
+halt> 
+               
+*** HALT at 594; press Return to continue; enter 'h' for help or 'q' to quit
+halt> 
+
+SW1 MUST BE,OFF INITIALLY.
+TO START GAME.
+SW2 OFF-AUTOMATIC SHUFFLE AT END OF DECK.,SW2  ON-SHUFFLE CARDS BEFORE EACH HAND.
+SW2  ON-SHUFFLE CARDS BEFORE EACH HAND.
+SW3  ON-INITIALIZE TO START NEW GAME.
+SW4  ON-ENTRY ERROR.
+SET SENSE SWITCHES,,THEN PUSH START.
+*** HALT at 774; press Return to continue; enter 'h' for help or 'q' to quit
+halt> 
+
+
+^C
+*** system halted by user at PC = 4336 ; enter 'q' to quit
+user> t1
+sense switches now: 1000
+user> 
+
+	 9-H
+	 7-C	 3-H
+CARD-no
+		 4-C
+		 J-C
+	TOTAL = 16	TOTAL = 17	SCORE = -$1.00
+
+
+	 4-D
+	 2-C	 J-S
+CARD-yes
+	 5-S
+CARD-yes
+	10-S
+CARD-no
+		 6-D
+		 Q-S
+	TOTAL = 21	BUST	SCORE =  $0.00
+
+
+	 6-S
+	 3-D	 2-H
+CARD-
 ```
 
 ### 99 Bottles of Beer

@@ -508,617 +508,620 @@ WATCH_LAST = -1   # last contents of watched address
 BREAKPOINT = -1   # set breakpoints here
 
 while True:
-
-    if WATCHED > -1:    # watch a memory location for changes
-        new_watch = "%1u %2u" % (F[WATCHED], M[WATCHED])
-        if new_watch != WATCH_LAST:
-            if WATCH_LAST == -1:
-                WATCH_LAST = new_watch
-            else:
-                print("*** memory change at", WATCHED, "detected at PC =", PC)
-                print("old:", WATCH_LAST)
-                print("new:", new_watch)
-                WATCH_LAST = new_watch
-                debugger("watch")
-
-    if PC == BREAKPOINT:
-        dumpmem()
-        print("*** breakpoint at PC =", PC)
-        debugger("break")
-
-    if DEBUG:
-        CMD.write(str(PC) + ": ")
-        CMD.write(cmd.get(str(M[PC]) + str(M[PC+1]), "**") + " ")
-        for i in range(2, 12):
-            CMD.write(str(M[PC+i]))
-        CMD.write("\n")
-        CMD.flush()
-
-    if SINGLE_STEP:
-        print("*** single-step, PC = ", PC, ":", cmd.get(str(M[PC]) + str(M[PC+1])), show_args(PC+2))
-        debugger("step")
-
-    OP = M[PC], M[PC+1]
-
-    if OP not in known:
-        print()
-        print("*** Error: op code not implemented:", M[PC], M[PC+1], show_args(PC+2), "PC = ", PC)
-        if DEBUG:
-            dumpmem()
-        debugger("error")
-
-    # A
-    if OP == (2, 1):
-        p = getnum(PC+2)
-        q = getnum(PC+7)
-        pi, qi = p[1] * int(p[0]), q[1] * int(q[0])
-        #print("***",p," ",q," ")
-        setnum(getim(PC+2), pi + qi, digits = len(p[0]), over = set_over(p[0], q[0]))
-        set_ind(pi + qi)
-
-    # AM
-    if OP == (1, 1):
-        p = getnum(PC+2)
-        q = getimflag(PC+7)
-        pi, qi = p[1] * int(p[0]), q[1] * int(q[0])
-        #print("***",p," ",q," ")
-        setnum(getim(PC+2), pi + qi, digits = len(p[0]), over = set_over(p[0], q[0]))
-        set_ind(pi + qi)
-
-    # M
-    if OP == (2, 3):
-        p = getnum(PC+2)
-        q = getnum(PC+7)
-        pi, qi = p[1] * int(p[0]), q[1] * int(q[0])
-        for i in range(80, 100):
-            M[i] = 0
-            F[i] = 0
-        #print("***",p," ",q," ")
-        setnum(99, pi * qi, digits = len(p[0]) + len(q[0]))
-        set_ind(pi * qi)
-
-    # MM
-    if OP == (1, 3):
-        p = getnum(PC+2)
-        q = getimflag(PC+7)
-        pi, qi = p[1] * int(p[0]), q[1] * int(q[0])
-        for i in range(80, 100):
-            M[i] = 0
-            F[i] = 0
-        #print("***",p," ",q," ")
-        setnum(99, pi * qi, digits = len(p[0]) + len(q[0]))
-        set_ind(pi * qi)
-
-    # LD
-    if OP == (2, 8):
-        p = getim(PC+2)
-        q = getim(PC+7)
-        start = q
-        for i in range(80, 100):
-            M[i] = 0
-            F[i] = 0
-        F[99] = F[q]
-        while True:
-            M[p] = M[q]
-            if (F[q] and q != start):
-                F[p] = F[q]
-                break
-            p -= 1
-            q -= 1
-
-    # LDM
-    if OP == (1, 8):
-        p = getim(PC+2)
-        q = PC + 11
-        start = q
-        for i in range(80, 100):
-            M[i] = 0
-            F[i] = 0
-        F[99] = F[q]
-        while True:
-            M[p] = M[q]
-            if (F[q] and q != start):
-                F[p] = F[q]
-                break
-            p -= 1
-            q -= 1
-
-    # D
-    if OP == (2, 9):
-        p = getnum(0, x2 = 99)
-        q = getnum(PC+7)
-        pi, qi = p[1] * int(p[0]), q[1] * int(q[0])
-        if qi != 0 and int(getnum(PC+2)[0]) / int(q[0]) > 9:
-            first_digit = True
-        else:
-            first_digit = False
-        for i in range(80, 100):
-            M[i] = 0
-            F[i] = 0
-
-        if qi == 0:
-            IND["OVERFLOW"] = True
-        else:
-            d, m = divmod(int(p[0]), int(q[0]))
-            m = m * p[1]
-            dig_rem = max(2, len(q[0]))
-            #print("***",p,q,pi,qi,d,m,dig_rem)
-            setnum(99, m, digits = dig_rem)
-            if not same_sign(pi, qi):
-                d = -d
-            setnum(99 - dig_rem, d, digits = len(p[0]), over = set_over(p[0], q[0]))
-            set_ind(pi / qi)
-            if first_digit:
-                IND["OVERFLOW"] = True
-
-    # DM
-    if OP == (1, 9):
-        p = getnum(0, x2 = 99)
-        q = getimflag(PC+7)
-        pi, qi = p[1] * int(p[0]), q[1] * int(q[0])
-        if qi != 0 and int(getnum(PC+2)[0]) / int(q[0]) > 9:
-            first_digit = True
-        else:
-            first_digit = False
-        for i in range(80, 100):
-            M[i] = 0
-            F[i] = 0
-
-        if qi == 0:
-            IND["OVERFLOW"] = True
-        else:
-            d, m = divmod(int(p[0]), int(q[0]))
-            m = m * p[1]
-            dig_rem = max(2, len(q[0]))
-            #print("***",p,q,pi,qi,d,m,dig_rem)
-            setnum(99, m, digits = dig_rem)
-            if not same_sign(pi, qi):
-                d = -d
-            setnum(99 - dig_rem, d, digits = len(p[0]), over = set_over(p[0], q[0]))
-            set_ind(pi / qi)
-            if first_digit:
-                IND["OVERFLOW"] = True
-
-    # CM
-    if OP == (1, 4):
-        p = getnum(PC+2)
-        q = getimflag(PC+7)
-        pi, qi = p[1] * int(p[0]), q[1] * int(q[0])
-        #print("CM:",p,q)
-        if pi > qi:
-            IND["HIGH"] = True
-        else:
-            IND["HIGH"] = False
-        if pi == qi:
-            IND["EQ"] = True
-        else:
-            IND["EQ"] = False
-        if IND["HIGH"] or IND["EQ"]:
-            IND["HEQ"] = True
-        else:
-            IND["HEQ"] = False
-
-    # C
-    if OP == (2, 4):
-        p = getnum(PC+2)
-        q = getnum(PC+7)
-        pi, qi = p[1] * int(p[0]), q[1] * int(q[0])
-        if pi > qi:
-            IND["HIGH"] = True
-        else:
-            IND["HIGH"] = False
-        if pi == qi:
-            IND["EQ"] = True
-        else:
-            IND["EQ"] = False
-        if IND["HIGH"] or IND["EQ"]:
-            IND["HEQ"] = True
-        else:
-            IND["HEQ"] = False
-        IND["OVERFLOW"] = False
-        if same_sign(pi, qi):
-            if len(p[0]) < len(q[0]):
-                IND["OVERFLOW"] = True
-
-    # CF
-    if OP == (3, 3):
-        F[getim(PC+2)] = 0
-
-    # H
-    if OP == (4, 8):
-        #break
-        print()
-        print("*** HALT at %u; press Return to continue; enter 'h' for help or 'q' to quit" % PC)
-        debugger("halt")
-        PC += 12
-        continue
-
-    # S
-    if OP == (2, 2):
-        p = getnum(PC+2)
-        q = getnum(PC+7)
-        pi, qi = p[1] * int(p[0]), q[1] * int(q[0])
-        #print("***",p," ",q," ")
-        setnum(getim(PC+2), pi - qi, digits = len(p[0]), over = set_over(p[0], q[0]))
-        set_ind(pi - qi)
-
-    # SM
-    if OP == (1, 2):
-        p = getnum(PC+2)
-        q = getimflag(PC+7)
-        pi, qi = p[1] * int(p[0]), q[1] * int(q[0])
-        #print("***",p," ",q," ")
-        setnum(getim(PC+2), pi - qi, digits = len(p[0]), over = set_over(p[0], q[0]))
-        set_ind(pi - qi)
-
-    # SF
-    if OP == (3, 2):
-        F[getim(PC+2)] = 1
-
-    # RA
-    if OP == (3, 7):
-        n = getim(PC+2)
-        dev = M[PC + 9]
-        if dev == 5: # (punch card)
-            cardline_alpha(n)
-        if dev == 1: # TTY
-            txt = input()
-            txt = txt.strip()
-            for x in txt:
-                M[n-1] = almer[x.upper()][0]
-                M[n] = almer[x.upper()][1]
-                n += 2
-
-    # RN
-    if OP == (3, 6):
-        pos = getim(PC+2)
-        dev = M[PC + 9]
-        if dev == 5: # (punch card)
-            cardline(pos)
-            #print("reading", pos)
-        if dev == 1: # TTY
-            s = input()
-            for n, x in enumerate(s):
-                M[pos+n] = int(x)
-
-    # WA
-    if OP == (3, 9):
-        n = getim(PC+2)-1
-        start = n
-        dev = M[PC+9]
-        if dev == 1:    # TTY
-            while True:
-                if SLOW:
-                    sys.stdout.flush()
-                    time.sleep(.1)
-                c1, c2 = M[n], M[n+1]
-                out = CH_UNDEF      # undefined character
-                if c1 == RM or c2 == RM:
-                    break
-                for k in almer.keys():
-                    if almer[k][0] == c1 and almer[k][1] == c2:
-                        out = k
-                print(out, end="")
-                sys.stdout.flush()
-                n += 2
-        if dev == 4:    # card punch
-            while n - start < 160:
-                c1, c2 = M[n], M[n+1]
-                out = CH_UNDEF      # undefined character
-                if c1 == RM or c2 == RM:
-                    OUTFILE.write("|")
+    try:
+        if WATCHED > -1:    # watch a memory location for changes
+            new_watch = "%1u %2u" % (F[WATCHED], M[WATCHED])
+            if new_watch != WATCH_LAST:
+                if WATCH_LAST == -1:
+                    WATCH_LAST = new_watch
                 else:
+                    print("*** memory change at", WATCHED, "detected at PC =", PC)
+                    print("old:", WATCH_LAST)
+                    print("new:", new_watch)
+                    WATCH_LAST = new_watch
+                    debugger("watch")
+
+        if PC == BREAKPOINT:
+            dumpmem()
+            print("*** breakpoint at PC =", PC)
+            debugger("break")
+
+        if DEBUG:
+            CMD.write(str(PC) + ": ")
+            CMD.write(cmd.get(str(M[PC]) + str(M[PC+1]), "**") + " ")
+            for i in range(2, 12):
+                CMD.write(str(M[PC+i]))
+            CMD.write("\n")
+            CMD.flush()
+
+        if SINGLE_STEP:
+            print("*** single-step, PC = ", PC, ":", cmd.get(str(M[PC]) + str(M[PC+1])), show_args(PC+2))
+            debugger("step")
+
+        OP = M[PC], M[PC+1]
+
+        if OP not in known:
+            print()
+            print("*** Error: op code not implemented:", M[PC], M[PC+1], show_args(PC+2), "PC = ", PC)
+            if DEBUG:
+                dumpmem()
+            debugger("error")
+
+        # A
+        if OP == (2, 1):
+            p = getnum(PC+2)
+            q = getnum(PC+7)
+            pi, qi = p[1] * int(p[0]), q[1] * int(q[0])
+            #print("***",p," ",q," ")
+            setnum(getim(PC+2), pi + qi, digits = len(p[0]), over = set_over(p[0], q[0]))
+            set_ind(pi + qi)
+
+        # AM
+        if OP == (1, 1):
+            p = getnum(PC+2)
+            q = getimflag(PC+7)
+            pi, qi = p[1] * int(p[0]), q[1] * int(q[0])
+            #print("***",p," ",q," ")
+            setnum(getim(PC+2), pi + qi, digits = len(p[0]), over = set_over(p[0], q[0]))
+            set_ind(pi + qi)
+
+        # M
+        if OP == (2, 3):
+            p = getnum(PC+2)
+            q = getnum(PC+7)
+            pi, qi = p[1] * int(p[0]), q[1] * int(q[0])
+            for i in range(80, 100):
+                M[i] = 0
+                F[i] = 0
+            #print("***",p," ",q," ")
+            setnum(99, pi * qi, digits = len(p[0]) + len(q[0]))
+            set_ind(pi * qi)
+
+        # MM
+        if OP == (1, 3):
+            p = getnum(PC+2)
+            q = getimflag(PC+7)
+            pi, qi = p[1] * int(p[0]), q[1] * int(q[0])
+            for i in range(80, 100):
+                M[i] = 0
+                F[i] = 0
+            #print("***",p," ",q," ")
+            setnum(99, pi * qi, digits = len(p[0]) + len(q[0]))
+            set_ind(pi * qi)
+
+        # LD
+        if OP == (2, 8):
+            p = getim(PC+2)
+            q = getim(PC+7)
+            start = q
+            for i in range(80, 100):
+                M[i] = 0
+                F[i] = 0
+            F[99] = F[q]
+            while True:
+                M[p] = M[q]
+                if (F[q] and q != start):
+                    F[p] = F[q]
+                    break
+                p -= 1
+                q -= 1
+
+        # LDM
+        if OP == (1, 8):
+            p = getim(PC+2)
+            q = PC + 11
+            start = q
+            for i in range(80, 100):
+                M[i] = 0
+                F[i] = 0
+            F[99] = F[q]
+            while True:
+                M[p] = M[q]
+                if (F[q] and q != start):
+                    F[p] = F[q]
+                    break
+                p -= 1
+                q -= 1
+
+        # D
+        if OP == (2, 9):
+            p = getnum(0, x2 = 99)
+            q = getnum(PC+7)
+            pi, qi = p[1] * int(p[0]), q[1] * int(q[0])
+            if qi != 0 and int(getnum(PC+2)[0]) / int(q[0]) > 9:
+                first_digit = True
+            else:
+                first_digit = False
+            for i in range(80, 100):
+                M[i] = 0
+                F[i] = 0
+
+            if qi == 0:
+                IND["OVERFLOW"] = True
+            else:
+                d, m = divmod(int(p[0]), int(q[0]))
+                m = m * p[1]
+                dig_rem = max(2, len(q[0]))
+                #print("***",p,q,pi,qi,d,m,dig_rem)
+                setnum(99, m, digits = dig_rem)
+                if not same_sign(pi, qi):
+                    d = -d
+                setnum(99 - dig_rem, d, digits = len(p[0]), over = set_over(p[0], q[0]))
+                set_ind(pi / qi)
+                if first_digit:
+                    IND["OVERFLOW"] = True
+
+        # DM
+        if OP == (1, 9):
+            p = getnum(0, x2 = 99)
+            q = getimflag(PC+7)
+            pi, qi = p[1] * int(p[0]), q[1] * int(q[0])
+            if qi != 0 and int(getnum(PC+2)[0]) / int(q[0]) > 9:
+                first_digit = True
+            else:
+                first_digit = False
+            for i in range(80, 100):
+                M[i] = 0
+                F[i] = 0
+
+            if qi == 0:
+                IND["OVERFLOW"] = True
+            else:
+                d, m = divmod(int(p[0]), int(q[0]))
+                m = m * p[1]
+                dig_rem = max(2, len(q[0]))
+                #print("***",p,q,pi,qi,d,m,dig_rem)
+                setnum(99, m, digits = dig_rem)
+                if not same_sign(pi, qi):
+                    d = -d
+                setnum(99 - dig_rem, d, digits = len(p[0]), over = set_over(p[0], q[0]))
+                set_ind(pi / qi)
+                if first_digit:
+                    IND["OVERFLOW"] = True
+
+        # CM
+        if OP == (1, 4):
+            p = getnum(PC+2)
+            q = getimflag(PC+7)
+            pi, qi = p[1] * int(p[0]), q[1] * int(q[0])
+            #print("CM:",p,q)
+            if pi > qi:
+                IND["HIGH"] = True
+            else:
+                IND["HIGH"] = False
+            if pi == qi:
+                IND["EQ"] = True
+            else:
+                IND["EQ"] = False
+            if IND["HIGH"] or IND["EQ"]:
+                IND["HEQ"] = True
+            else:
+                IND["HEQ"] = False
+
+        # C
+        if OP == (2, 4):
+            p = getnum(PC+2)
+            q = getnum(PC+7)
+            pi, qi = p[1] * int(p[0]), q[1] * int(q[0])
+            if pi > qi:
+                IND["HIGH"] = True
+            else:
+                IND["HIGH"] = False
+            if pi == qi:
+                IND["EQ"] = True
+            else:
+                IND["EQ"] = False
+            if IND["HIGH"] or IND["EQ"]:
+                IND["HEQ"] = True
+            else:
+                IND["HEQ"] = False
+            IND["OVERFLOW"] = False
+            if same_sign(pi, qi):
+                if len(p[0]) < len(q[0]):
+                    IND["OVERFLOW"] = True
+
+        # CF
+        if OP == (3, 3):
+            F[getim(PC+2)] = 0
+
+        # H
+        if OP == (4, 8):
+            #break
+            print()
+            print("*** HALT at %u; press Return to continue; enter 'h' for help or 'q' to quit" % PC)
+            debugger("halt")
+            PC += 12
+            continue
+
+        # S
+        if OP == (2, 2):
+            p = getnum(PC+2)
+            q = getnum(PC+7)
+            pi, qi = p[1] * int(p[0]), q[1] * int(q[0])
+            #print("***",p," ",q," ")
+            setnum(getim(PC+2), pi - qi, digits = len(p[0]), over = set_over(p[0], q[0]))
+            set_ind(pi - qi)
+
+        # SM
+        if OP == (1, 2):
+            p = getnum(PC+2)
+            q = getimflag(PC+7)
+            pi, qi = p[1] * int(p[0]), q[1] * int(q[0])
+            #print("***",p," ",q," ")
+            setnum(getim(PC+2), pi - qi, digits = len(p[0]), over = set_over(p[0], q[0]))
+            set_ind(pi - qi)
+
+        # SF
+        if OP == (3, 2):
+            F[getim(PC+2)] = 1
+
+        # RA
+        if OP == (3, 7):
+            n = getim(PC+2)
+            dev = M[PC + 9]
+            if dev == 5: # (punch card)
+                cardline_alpha(n)
+            if dev == 1: # TTY
+                txt = input()
+                txt = txt.strip()
+                for x in txt:
+                    M[n-1] = almer[x.upper()][0]
+                    M[n] = almer[x.upper()][1]
+                    n += 2
+
+        # RN
+        if OP == (3, 6):
+            pos = getim(PC+2)
+            dev = M[PC + 9]
+            if dev == 5: # (punch card)
+                cardline(pos)
+                #print("reading", pos)
+            if dev == 1: # TTY
+                s = input()
+                for n, x in enumerate(s):
+                    M[pos+n] = int(x)
+
+        # WA
+        if OP == (3, 9):
+            n = getim(PC+2)-1
+            start = n
+            dev = M[PC+9]
+            if dev == 1:    # TTY
+                while True:
+                    if SLOW:
+                        sys.stdout.flush()
+                        time.sleep(.1)
+                    c1, c2 = M[n], M[n+1]
+                    out = CH_UNDEF      # undefined character
+                    if c1 == RM or c2 == RM:
+                        break
                     for k in almer.keys():
                         if almer[k][0] == c1 and almer[k][1] == c2:
                             out = k
-                    OUTFILE.write(out)
-                n += 2
-            OUTFILE.write("\n")
-            OUTFILE.flush()
+                    print(out, end="")
+                    sys.stdout.flush()
+                    n += 2
+            if dev == 4:    # card punch
+                while n - start < 160:
+                    c1, c2 = M[n], M[n+1]
+                    out = CH_UNDEF      # undefined character
+                    if c1 == RM or c2 == RM:
+                        OUTFILE.write("|")
+                    else:
+                        for k in almer.keys():
+                            if almer[k][0] == c1 and almer[k][1] == c2:
+                                out = k
+                        OUTFILE.write(out)
+                    n += 2
+                OUTFILE.write("\n")
+                OUTFILE.flush()
 
-    # WN
-    if OP == (3, 8):
-        n = getim(PC+2)
-        start = n
-        dev = M[PC + 9]
-        if dev == 1:    # TTY
+        # WN
+        if OP == (3, 8):
+            n = getim(PC+2)
+            start = n
+            dev = M[PC + 9]
+            if dev == 1:    # TTY
+                while True:
+                    if SLOW:
+                        sys.stdout.flush()
+                        time.sleep(.1)
+                    if M[n] == RM:
+                        break
+                    if F[n]:
+                        print(str(M[n]) + OVER, end="")
+                    else:
+                        print(M[n], end="")
+                    sys.stdout.flush()
+                    n += 1
+            if dev == 4:    # punch card
+                noflagchar = "0123456789|    "
+                flagchar   = "]JKLMNOPQR!    "
+                while n - start < 80:
+                    x = M[n]
+                    if F[n]:
+                        OUTFILE.write(flagchar[x])
+                    else:
+                        OUTFILE.write(noflagchar[x])
+                    n += 1
+                OUTFILE.write("\n")
+                OUTFILE.flush()
+
+        # DN
+        if OP == (3, 5):
+            start = getim(PC+2)
+            dev = M[PC + 9]
+            if dev == 1:    # TTY
+                for i in range(start, MSIZE):
+                    if SLOW:
+                        sys.stdout.flush()
+                        time.sleep(.1)
+                    if M[i] == RM:
+                        print(CH_REC, end="")
+                        continue
+                    if F[i]:
+                        print(str(M[i]) + OVER, end="")
+                    else:
+                        print(M[i], end="")
+            if dev == 4:    # punch card
+                noflagchar = "0123456789|    "
+                flagchar   = "]JKLMNOPQR!    "
+                for i in range(start, MSIZE):
+                    x = M[i]
+                    if F[i]:
+                        OUTFILE.write(flagchar[x])
+                    else:
+                        OUTFILE.write(noflagchar[x])
+                OUTFILE.write("\n")
+                OUTFILE.flush()
+
+        # TF
+        if OP == (2, 6):
+            p = getim(PC+2)
+            q = getim(PC+7)
+            start = p
             while True:
-                if SLOW:
-                    sys.stdout.flush()
-                    time.sleep(.1)
-                if M[n] == RM:
+                M[p] = M[q]
+                F[p] = F[q]
+                if (F[q] and p != start):
                     break
-                if F[n]:
-                    print(str(M[n]) + OVER, end="")
-                else:
-                    print(M[n], end="")
-                sys.stdout.flush()
-                n += 1
-        if dev == 4:    # punch card
-            noflagchar = "0123456789|    "
-            flagchar   = "]JKLMNOPQR!    "
-            while n - start < 80:
-                x = M[n]
-                if F[n]:
-                    OUTFILE.write(flagchar[x])
-                else:
-                    OUTFILE.write(noflagchar[x])
-                n += 1
-            OUTFILE.write("\n")
-            OUTFILE.flush()
+                p -= 1
+                q -= 1
 
-    # DN
-    if OP == (3, 5):
-        start = getim(PC+2)
-        dev = M[PC + 9]
-        if dev == 1:    # TTY
-            for i in range(start, MSIZE):
+        # TR
+        if OP == (3, 1):
+            p = getim(PC+2)
+            q = getim(PC+7)
+            #print("TR: ", p, q)
+            while True:
+                M[p] = M[q]
+                F[p] = F[q]
+                if M[q] == RM:
+                    break
+                p += 1
+                q += 1
+
+        # TFM
+        if OP == (1, 6):
+            p = getim(PC+2)
+            q = PC+11
+            start = p
+            while True:
+                M[p] = M[q]
+                F[p] = F[q]
+                if (F[q] and p != start) or q == PC+7:
+                    break
+                p -= 1
+                q -= 1
+
+        # BTM
+        if OP == (1, 7):
+            pos = getim(PC+2)
+            for i in range(4, -11, -1):    # SPS wants to copy more than 5 digits with BTM!
+                M[pos-5+i] = M[PC+7+i]
+                F[pos-5+i] = F[PC+7+i]
+                if i < 4 and F[PC+7+i]:
+                    break
+            BRANCH_BACK = PC + 12
+            PC = pos
+            continue
+
+        # BT
+        if OP == (2, 7):
+            pos = getim(PC+2)
+            q = getim(PC+7)
+            i = pos - 1
+            while True:
+                M[i] = M[q]
+                F[i] = F[q]
+                if F[i] and i != pos - 1:
+                    break
+                i -= 1
+                q -= 1
+            BRANCH_BACK = PC + 12
+            PC = pos
+            continue
+
+        # BB
+        if OP == (4, 2):
+            PC = BRANCH_BACK
+            continue
+
+        # BI
+        if OP == (4, 6):
+            pos = getim(PC+2)
+            dev = 10 * M[PC+8] + M[PC+9]
+            #print(dev)
+            if dev == 6:
+                pass #print("read check", pos)
+            elif dev == 7:
+                pass #print("write check", pos)
+            elif dev == 9:
+                #print("card check", PC, pos)
+                if IND["LASTCARD"]:
+                    PC = pos
+                    continue
+            elif dev == 11:
+                if IND["HIGH"]:
+                    PC = pos
+                    continue
+            elif dev == 12:
+                if IND["EQ"]:
+                    PC = pos
+                    continue
+            elif dev == 13:
+                if IND["HEQ"]:
+                    PC = pos
+                    continue
+            elif dev == 14:
+                if IND["OVERFLOW"]:
+                    IND["OVERFLOW"] = False
+                    PC = pos
+                    continue
+            elif dev == 16:
+                pass #print("mem check", pos)
+            elif dev == 17:
+                pass #print("mem check 2", pos)
+            elif dev == 19:
+                pass  # GOTRAN needs this check
+            elif dev <= 4:
+                if dev == 1 and SENSE_SW[0]:
+                    PC = pos
+                    continue
+                if dev == 2 and SENSE_SW[1]:
+                    PC = pos
+                    continue
+                if dev == 3 and SENSE_SW[2]:
+                    PC = pos
+                    continue
+                if dev == 4 and SENSE_SW[3]:
+                    PC = pos
+                    continue
+            else:
+                print("*** BI fail", PC, pos, dev)
+                debugger("halt")
+
+        # BNI
+        if OP == (4, 7):
+            pos = getim(PC+2)
+            dev = 10 * M[PC+8] + M[PC+9]
+            #print(dev)
+            if dev == 6:
+                pass #print("read check", pos)
+            elif dev == 7:
+                pass #print("write check", pos)
+            elif dev == 8: # GOTRAN needs this check
+                PC = pos
+                continue
+            elif dev == 9:
+                #print("card check", PC, pos)
+                if not IND["LASTCARD"]:
+                    PC = pos
+                    continue
+            elif dev == 11:
+                if not IND["HIGH"]:
+                    PC = pos
+                    continue
+            elif dev == 12:
+                if not IND["EQ"]:
+                    PC = pos
+                    continue
+            elif dev == 13:
+                if not IND["HEQ"]:
+                    PC = pos
+                    continue
+            elif dev == 14:
+                if not IND["OVERFLOW"]:
+                    PC = pos
+                    continue
+                else:
+                    IND["OVERFLOW"] = False
+            elif dev == 16:
+                pass #print("mem check", pos)
+            elif dev == 17:
+                pass #print("mem check 2", pos)
+            elif dev <= 4:
+                if dev == 1 and not SENSE_SW[0]:
+                    PC = pos
+                    continue
+                if dev == 2 and not SENSE_SW[1]:
+                    PC = pos
+                    continue
+                if dev == 3 and not SENSE_SW[2]:
+                    PC = pos
+                    continue
+                if dev == 4 and not SENSE_SW[3]:
+                    PC = pos
+                    continue
+            else:
+                print("*** BNI fail", PC, pos, dev)
+                debugger("halt")
+
+        # B
+        if OP == (4, 9):
+            pos = getim(PC+2)
+            PC = pos
+            #print("B PC:", PC)
+            continue
+
+        # BD
+        if OP == (4, 3):
+            pos = getim(PC+2)
+            q = getim(PC+7)
+            if M[q]:
+                #print("BD: ",M[q],PC,pos)
+                PC = pos
+                continue
+
+        # BNF
+        if OP == (4, 4):
+            pos = getim(PC+2)
+            q = getim(PC+7)
+            if not F[q]:
+                PC = pos
+                continue
+
+        # BNR
+        if OP == (4, 5):
+            p = getim(PC+2)
+            q = getim(PC+7)
+            #print(M[PC:PC+12])
+            if M[q] != RM:
+                PC = p
+                continue
+
+        # TD
+        if OP == (2, 5):
+            p = getim(PC+2)
+            q = getim(PC+7)
+            M[p] = M[q]
+            F[p] = F[q]
+
+        # TDM
+        if OP == (1, 5):
+            p = getim(PC+2)
+            M[p] = M[PC+11]
+            F[p] = F[PC+11]
+
+        # K
+        if OP == (3, 4):
+            dev = M[PC+9]
+            if dev == 1:
+                if M[PC+11] == 1:
+                    print(" ", end="")
+                if M[PC+11] == 2:
+                    print()
+                if M[PC+11] == 8:
+                    print("\t", end="")
                 if SLOW:
                     sys.stdout.flush()
                     time.sleep(.1)
-                if M[i] == RM:
-                    print(CH_REC, end="")
-                    continue
-                if F[i]:
-                    print(str(M[i]) + OVER, end="")
-                else:
-                    print(M[i], end="")
-        if dev == 4:    # punch card
-            noflagchar = "0123456789|    "
-            flagchar   = "]JKLMNOPQR!    "
-            for i in range(start, MSIZE):
-                x = M[i]
-                if F[i]:
-                    OUTFILE.write(flagchar[x])
-                else:
-                    OUTFILE.write(noflagchar[x])
-            OUTFILE.write("\n")
-            OUTFILE.flush()
 
-    # TF
-    if OP == (2, 6):
-        p = getim(PC+2)
-        q = getim(PC+7)
-        start = p
-        while True:
-            M[p] = M[q]
-            F[p] = F[q]
-            if (F[q] and p != start):
-                break
-            p -= 1
-            q -= 1
-
-    # TR
-    if OP == (3, 1):
-        p = getim(PC+2)
-        q = getim(PC+7)
-        #print("TR: ", p, q)
-        while True:
-            M[p] = M[q]
-            F[p] = F[q]
-            if M[q] == RM:
-                break
-            p += 1
-            q += 1
-
-    # TFM
-    if OP == (1, 6):
-        p = getim(PC+2)
-        q = PC+11
-        start = p
-        while True:
-            M[p] = M[q]
-            F[p] = F[q]
-            if (F[q] and p != start) or q == PC+7:
-                break
-            p -= 1
-            q -= 1
-
-    # BTM
-    if OP == (1, 7):
-        pos = getim(PC+2)
-        for i in range(4, -11, -1):    # SPS wants to copy more than 5 digits with BTM!
-            M[pos-5+i] = M[PC+7+i]
-            F[pos-5+i] = F[PC+7+i]
-            if i < 4 and F[PC+7+i]:
-                break
-        BRANCH_BACK = PC + 12
-        PC = pos
-        continue
-
-    # BT
-    if OP == (2, 7):
-        pos = getim(PC+2)
-        q = getim(PC+7)
-        i = pos - 1
-        while True:
-            M[i] = M[q]
-            F[i] = F[q]
-            if F[i] and i != pos - 1:
-                break
-            i -= 1
-            q -= 1
-        BRANCH_BACK = PC + 12
-        PC = pos
-        continue
-
-    # BB
-    if OP == (4, 2):
-        PC = BRANCH_BACK
-        continue
-
-    # BI
-    if OP == (4, 6):
-        pos = getim(PC+2)
-        dev = 10 * M[PC+8] + M[PC+9]
-        #print(dev)
-        if dev == 6:
-            pass #print("read check", pos)
-        elif dev == 7:
-            pass #print("write check", pos)
-        elif dev == 9:
-            #print("card check", PC, pos)
-            if IND["LASTCARD"]:
-                PC = pos
-                continue
-        elif dev == 11:
-            if IND["HIGH"]:
-                PC = pos
-                continue
-        elif dev == 12:
-            if IND["EQ"]:
-                PC = pos
-                continue
-        elif dev == 13:
-            if IND["HEQ"]:
-                PC = pos
-                continue
-        elif dev == 14:
-            if IND["OVERFLOW"]:
-                IND["OVERFLOW"] = False
-                PC = pos
-                continue
-        elif dev == 16:
-            pass #print("mem check", pos)
-        elif dev == 17:
-            pass #print("mem check 2", pos)
-        elif dev == 19:
-            pass  # GOTRAN needs this check
-        elif dev <= 4:
-            if dev == 1 and SENSE_SW[0]:
-                PC = pos
-                continue
-            if dev == 2 and SENSE_SW[1]:
-                PC = pos
-                continue
-            if dev == 3 and SENSE_SW[2]:
-                PC = pos
-                continue
-            if dev == 4 and SENSE_SW[3]:
-                PC = pos
-                continue
-        else:
-            print("*** BI fail", PC, pos, dev)
-            debugger("halt")
-
-    # BNI
-    if OP == (4, 7):
-        pos = getim(PC+2)
-        dev = 10 * M[PC+8] + M[PC+9]
-        #print(dev)
-        if dev == 6:
-            pass #print("read check", pos)
-        elif dev == 7:
-            pass #print("write check", pos)
-        elif dev == 8: # GOTRAN needs this check
-            PC = pos
-            continue
-        elif dev == 9:
-            #print("card check", PC, pos)
-            if not IND["LASTCARD"]:
-                PC = pos
-                continue
-        elif dev == 11:
-            if not IND["HIGH"]:
-                PC = pos
-                continue
-        elif dev == 12:
-            if not IND["EQ"]:
-                PC = pos
-                continue
-        elif dev == 13:
-            if not IND["HEQ"]:
-                PC = pos
-                continue
-        elif dev == 14:
-            if not IND["OVERFLOW"]:
-                PC = pos
-                continue
-            else:
-                IND["OVERFLOW"] = False
-        elif dev == 16:
-            pass #print("mem check", pos)
-        elif dev == 17:
-            pass #print("mem check 2", pos)
-        elif dev <= 4:
-            if dev == 1 and not SENSE_SW[0]:
-                PC = pos
-                continue
-            if dev == 2 and not SENSE_SW[1]:
-                PC = pos
-                continue
-            if dev == 3 and not SENSE_SW[2]:
-                PC = pos
-                continue
-            if dev == 4 and not SENSE_SW[3]:
-                PC = pos
-                continue
-        else:
-            print("*** BNI fail", PC, pos, dev)
-            debugger("halt")
-
-    # B
-    if OP == (4, 9):
-        pos = getim(PC+2)
-        PC = pos
-        #print("B PC:", PC)
-        continue
-
-    # BD
-    if OP == (4, 3):
-        pos = getim(PC+2)
-        q = getim(PC+7)
-        if M[q]:
-            #print("BD: ",M[q],PC,pos)
-            PC = pos
-            continue
-
-    # BNF
-    if OP == (4, 4):
-        pos = getim(PC+2)
-        q = getim(PC+7)
-        if not F[q]:
-            PC = pos
-            continue
-
-    # BNR
-    if OP == (4, 5):
-        p = getim(PC+2)
-        q = getim(PC+7)
-        #print(M[PC:PC+12])
-        if M[q] != RM:
-            PC = p
-            continue
-
-    # TD
-    if OP == (2, 5):
-        p = getim(PC+2)
-        q = getim(PC+7)
-        M[p] = M[q]
-        F[p] = F[q]
-
-    # TDM
-    if OP == (1, 5):
-        p = getim(PC+2)
-        M[p] = M[PC+11]
-        F[p] = F[PC+11]
-
-    # K
-    if OP == (3, 4):
-        dev = M[PC+9]
-        if dev == 1:
-            if M[PC+11] == 1:
-                print(" ", end="")
-            if M[PC+11] == 2:
-                print()
-            if M[PC+11] == 8:
-                print("\t", end="")
-            if SLOW:
-                sys.stdout.flush()
-                time.sleep(.1)
-
-    PC += 12
-    #print("new PC: ", PC)
-    #show()
-
+        PC += 12
+        #print("new PC: ", PC)
+        #show()
+    except KeyboardInterrupt:
+        print()
+        print("*** system halted by user at PC =", PC, "; enter 'q' to quit")
+        debugger("user")
 
