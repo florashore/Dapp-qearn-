@@ -42,7 +42,7 @@ See the [IBM1620-Baseball](https://github.com/mdoege/IBM1620-Baseball) repo for 
 * base.txt: baseball simulator (new)
 * bbc1.txt: baseball simulator (old)
 * beer.txt: 99 Bottles of Beer demo (2005)
-* black.txt: Blackjack game
+* black.txt: blackjack game
 * block.txt: punch block letter messages into punch cards
 * cal.txt: day of the week calculator
 * gotran.txt: the GOTRAN interactive programming language
