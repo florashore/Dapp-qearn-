@@ -64,7 +64,7 @@ See the [IBM1620-Baseball](https://github.com/mdoege/IBM1620-Baseball) repo for 
 * hello.sps: assembly
 * test.f: Fortran
 
-The ```rosetta_code/``` directory contains four assembly programs which were created for [Rosetta Code](https://rosettacode.org/wiki/Category:IBM_1620_SPS): a cellular automaton, Fibonacci numbers, FizzBuzz, and the Mandelbrot set. Except for the Mandelbrot set (which requires floating-point instructions), all programs work in Py1620. Assembly was done with [SPS1620](https://github.com/IBM-1620/SPS1620), a Java-based cross-assembler.
+The ```rosetta_code/``` directory contains four assembly programs which were created for [Rosetta Code](https://rosettacode.miraheze.org/wiki/Category:IBM_1620_SPS): a cellular automaton, Fibonacci numbers, FizzBuzz, and the Mandelbrot set. Except for the Mandelbrot set (which requires floating-point instructions), all programs work in Py1620. Assembly was done with [SPS1620](https://github.com/IBM-1620/SPS1620), a Java-based cross-assembler.
 
 ### Why emulate the IBM 1620?
 
