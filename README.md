@@ -330,28 +330,92 @@ user> t1
 sense switches now: 1000
 user> 
 
-	 9-H
-	 7-C	 3-H
-CARD-no
-		 4-C
-		 J-C
-	TOTAL = 16	TOTAL = 17	SCORE = -$1.00
-
-
+	 7-D
+	 5-C	 K-S
+CARD-yes
+	 3-C
+CARD-yes
 	 4-D
-	 2-C	 J-S
-CARD-yes
-	 5-S
-CARD-yes
-	10-S
 CARD-no
-		 6-D
+		 J-D
+	TOTAL = 19	TOTAL = 20	SCORE = -$1.00
+
+
+	 3-D
+	 7-C	 A-D
+CARD-yes
+	10-C
+CARD-no
+		10-S
+	TOTAL = 20	BLACKJACK	SCORE = -$2.00
+
+
+	 7-D
+	10-H	 5-C
+CARD-no
+		 2-S
+		 K-D
+		 6-H
+	TOTAL = 17	BUST	SCORE = -$1.00
+
+
+	 K-S
+	 5-H	 7-S
+CARD-yes
+	 9-S	 K-H
+	BUST	TOTAL = 17	SCORE = -$2.00
+
+
+	 J-D
+	 Q-H	 6-D
+CARD-no
+		 2-H
+		 5-S
+		 4-S
+		 A-S
+	TOTAL = 20	TOTAL = 18	SCORE = -$1.00
+
+
+	 3-S
+	 8-C	 5-D
+CARD-yes
+	 J-S
+CARD-no
+		 8-S
+		 6-S
+	TOTAL = 21	TOTAL = 19	SCORE =  $0.00
+
+
+	 J-C
+	 3-H	 4-D
+CARD-yes
+	 4-H
+CARD-no
+		 Q-C
+		 8-H
+	TOTAL = 17	BUST	SCORE = +$1.00
+
+
+	 Q-D
+	 9-C	 K-C
+CARD-no
+		 3-C
+		10-D
+	TOTAL = 19	BUST	SCORE = +$2.00
+
+
+	 2-C
+	10-C	 9-H
+CARD-yes
+	 3-D
+CARD-no
+		 7-C
 		 Q-S
-	TOTAL = 21	BUST	SCORE =  $0.00
+	TOTAL = 15	BUST	SCORE = +$3.00
 
 
-	 6-S
-	 3-D	 2-H
+	 6-C
+	 7-H	 A-H
 CARD-
 ```
 
