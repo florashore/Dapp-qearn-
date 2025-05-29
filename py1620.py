@@ -765,9 +765,12 @@ while True:
                 txt = input()
                 txt = txt.strip()
                 for x in txt:
-                    M[n-1] = almer[x.upper()][0]
-                    M[n] = almer[x.upper()][1]
-                    n += 2
+                    try:
+                        M[n-1] = almer[x.upper()][0]
+                        M[n] = almer[x.upper()][1]
+                        n += 2
+                    except:
+                        pass
 
         # RN
         if OP == (3, 6):
