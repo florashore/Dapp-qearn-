@@ -769,7 +769,7 @@ while True:
                         M[n-1] = almer[x.upper()][0]
                         M[n] = almer[x.upper()][1]
                         n += 2
-                    except:
+                    except KeyError:
                         pass
 
         # RN
