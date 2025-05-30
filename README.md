@@ -670,7 +670,7 @@ $ python3 block_decode.py output2.txt
 
 #### Output as PNG images
 
-With block_decode_image.py, the output can also be converted to an image of a punch card (needs PIL):
+With block_decode_image.py, the output can also be converted to an image of a punch card (needs [Pillow](https://pillow.readthedocs.io)):
 
 ```
 python3 block_decode_image.py output1.txt block_card1.png
