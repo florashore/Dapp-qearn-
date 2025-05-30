@@ -22,8 +22,6 @@ To run the slot machine / one-armed bandit, playing for 50 cents (sense switch 4
 
 Without any arguments, the tic-tac-toe game is run.
 
-Pressing Ctrl-C enters the debugger, where "h" prints help, "q" quits the emulator, and "c" (or just Return) continues emulation.
-
 Machine memory size (```MSIZE```) is defined on line 39 of py1620.py. The IBM 1620 was also available with 40,000 or 60,000 digits of memory and supported up to 100,000 digits in principle. However, some programs (like the day of the week program) will not work with memory sizes larger than 20k, therefore this remains the default.
 
 The Fortran compiler especially benefits from 40k digits or more, as its symbol table is limited to 200 entries on 20k systems, which is not enough to compile larger programs.
@@ -33,6 +31,32 @@ If the ```SLOW``` parameter on line 7 of py1620.py is set to True, terminal outp
 Py1620 uses a Unicode combining character to display overbars for digits with an active flag bit. These overbars may not look all that great with some terminal fonts, e.g. they may be shifted horizontally in respect to the digit below. Switching to a different terminal font with better overbar support (like [GNU Unifont](https://unifoundry.com/unifont/)) will solve this issue.
 
 See the [IBM1620-Baseball](https://github.com/mdoege/IBM1620-Baseball) repo for additional IBM 1620 tools and documentation.
+
+### Built-in debugger
+
+Pressing Ctrl-C enters the debugger, where "h" prints help, "q" quits the emulator, and "c" (or just Return) continues emulation. When the machine halts for another reason (e.g. a halt instruction, a breakpoint, etc.), this will also trigger the debugger, with the prompt showing the reason for halting (```halt, break, step, watch, user, error```).
+
+Output from the help command looks like this:
+```
+halt> h
+    Available commands when system is halted:
+      p        attach a punch card reader input file
+      d        save memory dump
+      e        examine memory
+      s        show current sense switch settings
+      t        toggle a sense switch with t1, t2, t3, t4
+      i        show indicators
+      m        manual mode (= single-step mode)
+      a        auto mode
+      g        set PC to value
+      c        continue (or just press Return)
+      q        quit emulator
+    PC = 0; print current instruction with: e 0/12
+```
+
+Memory dumps need [Pillow](https://pillow.readthedocs.io) to output a PNG that shows memory contents. Dumps also inlcude ```mem.txt```, which is in the same format as a SIMH memory dump (from ```e 0/20000```) for easy diffing.
+
+The ```DEBUG``` flag in line 6 of py1620.py enables logging a CPU trace to ```cmd.txt```.
 
 ### Included IBM 1620 software
 
