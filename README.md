@@ -339,7 +339,7 @@ halt>
 
 After the program has explained the sense switch settings, it will enter an infinite loop. Press Ctrl-C to start the debugger, then toggle sense switch 1 and continue. This will begin the game.
 
-This game is very similar to the [blackjack game by Mel Kaye](https://datatravelandexperiments.com/kps/sw/lgp/) (famous from "[The Story of Mel](https://en.wikipedia.org/wiki/The_Story_of_Mel)") for the [LGP-30](https://en.wikipedia.org/wiki/LGP-30). Both games also use the five-card rule (or five-card trick), so the player always wins if he has five cards (or more).
+This game is very similar to the [blackjack game by Mel Kaye](https://datatravelandexperiments.com/kps/sw/lgp/) (famous for "[The Story of Mel](https://en.wikipedia.org/wiki/The_Story_of_Mel)") for the [LGP-30](https://en.wikipedia.org/wiki/LGP-30). Both games also use the five-card rule (or five-card trick), so the player always wins if he has five cards (or more).
 
 The player's cards are in the left column; the computer's in the right column.
 ```
