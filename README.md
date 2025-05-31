@@ -22,6 +22,8 @@ To run the slot machine / one-armed bandit, playing for 50 cents (sense switch 4
 
 Without any arguments, the tic-tac-toe game is run.
 
+On Linux, you can make tabular output from the baseball and blackjack games line up properly by first setting the terminal's tab stops with the ```tabs``` command, e.g. ```tabs -18``` for the baseball game and ```tabs -16``` for blackjack.
+
 Machine memory size (```MSIZE```) is defined on line 39 of py1620.py. The IBM 1620 was also available with 40,000 or 60,000 digits of memory and supported up to 100,000 digits in principle. However, some programs (like the day of the week program) will not work with memory sizes larger than 20k, therefore this remains the default.
 
 The Fortran compiler especially benefits from 40k digits or more, as its symbol table is limited to 200 entries on 20k systems, which is not enough to compile larger programs.
@@ -341,7 +343,7 @@ After the program has explained the sense switch settings, it will enter an infi
 
 This game is very similar to the [blackjack game by Mel Kaye](https://datatravelandexperiments.com/kps/sw/lgp/) (famous for "[The Story of Mel](https://en.wikipedia.org/wiki/The_Story_of_Mel)") for the [LGP-30](https://en.wikipedia.org/wiki/LGP-30). Both games also use the five-card rule (or five-card trick), so the player always wins if he has five cards (or more).
 
-The player's cards are in the left column; the computer's in the right column.  On Linux, the program's output can be improved with the ```tabs``` command, e.g. ```tabs -16``` sets the terminal to 16-character-wide tab stops that work well with this game.
+The player's cards are in the left column; the computer's in the right column. On Linux, the program's output can be improved with the ```tabs``` command, e.g. ```tabs -16``` sets the terminal to 16-character-wide tab stops that work well with this game.
 ```
 $ python3 py1620.py black.txt 
 
