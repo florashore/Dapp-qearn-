@@ -379,97 +379,59 @@ halt>
 
 
 ^C
-*** system halted by user at PC = 4336 ; enter 'q' to quit
+*** system halted by user at PC = 4372 ; enter 'q' to quit
 user> t1
 sense switches now: 1000
 user> 
 
-	 7-D
-	 5-C	 K-S
+                 K-S
+                 J-C             5-S
+CARD-no
+                                 A-S
+                                10-H
+                                 9-D
+                TOTAL = 20      BUST            SCORE = +$1.00
+
+
+                 7-H
+                 Q-S             9-S
+CARD-no
+                                 3-C
+                                 K-H
+                TOTAL = 17      BUST            SCORE = +$2.00
+
+
+                 6-H
+                10-S             9-C
 CARD-yes
-	 3-C
+                 8-C             6-S
+                BUST            TOTAL = 15      SCORE = +$1.00
+
+
+                 3-S
+                 5-C             J-S
 CARD-yes
-	 4-D
+                 A-C
 CARD-no
-		 J-D
-	TOTAL = 19	TOTAL = 20	SCORE = -$1.00
+                                10-C
+                TOTAL = 19      TOTAL = 20      SCORE =  $0.00
 
 
-	 3-D
-	 7-C	 A-D
+                 3-H
+                 5-D             4-S
 CARD-yes
-	10-C
-CARD-no
-		10-S
-	TOTAL = 20	BLACKJACK	SCORE = -$2.00
-
-
-	 7-D
-	10-H	 5-C
-CARD-no
-		 2-S
-		 K-D
-		 6-H
-	TOTAL = 17	BUST	SCORE = -$1.00
-
-
-	 K-S
-	 5-H	 7-S
+                 4-H
 CARD-yes
-	 9-S	 K-H
-	BUST	TOTAL = 17	SCORE = -$2.00
-
-
-	 J-D
-	 Q-H	 6-D
-CARD-no
-		 2-H
-		 5-S
-		 4-S
-		 A-S
-	TOTAL = 20	TOTAL = 18	SCORE = -$1.00
-
-
-	 3-S
-	 8-C	 5-D
+                 5-H
 CARD-yes
-	 J-S
+                 A-D
 CARD-no
-		 8-S
-		 6-S
-	TOTAL = 21	TOTAL = 19	SCORE =  $0.00
+                                 7-S
+                5 CARDS         TOTAL = 11      SCORE = +$2.00
 
 
-	 J-C
-	 3-H	 4-D
-CARD-yes
-	 4-H
-CARD-no
-		 Q-C
-		 8-H
-	TOTAL = 17	BUST	SCORE = +$1.00
-
-
-	 Q-D
-	 9-C	 K-C
-CARD-no
-		 3-C
-		10-D
-	TOTAL = 19	BUST	SCORE = +$2.00
-
-
-	 2-C
-	10-C	 9-H
-CARD-yes
-	 3-D
-CARD-no
-		 7-C
-		 Q-S
-	TOTAL = 15	BUST	SCORE = +$3.00
-
-
-	 6-C
-	 7-H	 A-H
+                 Q-H
+                 6-D             7-C
 CARD-
 ```
 
